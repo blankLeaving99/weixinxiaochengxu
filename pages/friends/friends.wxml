@@ -1,0 +1,48 @@
+<view class="page-wrap">
+
+  <view class="card">
+    <text class="section-title" style="color: {{themeColor}}">🪪 我的档案</text>
+    <view class="row-input">
+      <text class="label">昵称</text>
+      <input class="input" placeholder="请输入" value="{{myName}}" bindinput="onNameInput" />
+      <view class="mini-btn" bindtap="saveProfile">保存</view>
+    </view>
+    <button class="btn btn-primary" bindtap="exportMine">📤 导出我的结果（复制到剪贴板）</button>
+  </view>
+
+  <view class="card">
+    <view class="head-row">
+      <text class="section-title flex" style="color: {{themeColor}}">👥 我的好友（{{friendCount}}）</text>
+      <view class="ghost-btn" bindtap="goRanking">🏆 排行榜</view>
+    </view>
+    <button class="btn btn-secondary" bindtap="importFriend">📥 添加好友（从剪贴板粘贴）</button>
+
+    <view class="toolbar" wx:if="{{!isEmpty}}">
+      <input class="search" placeholder="🔍 按昵称 / MBTI / 星座搜索" bindinput="onSearch" />
+      <picker bindchange="onSortChange" value="{{sortMode}}" range="{{sortLabels}}">
+        <view class="sort-btn">{{sortLabels[sortMode]}} ▾</view>
+      </picker>
+    </view>
+
+    <view wx:if="{{isEmpty}}" class="hint-empty">
+      <text>还没有好友数据。让朋友点「导出我的结果」复制后发给你，再点「添加好友」即可导入。</text>
+    </view>
+    <view wx:elif="{{isFiltered}}" class="hint-empty">
+      <text>未找到匹配的好友</text>
+    </view>
+
+    <view class="friend-row" wx:for="{{friendList}}" wx:key="name">
+      <view class="friend-top">
+        <text class="friend-name">👤 {{item.name}}</text>
+        <text class="friend-summary" wx:if="{{item.summary}}">  ·  {{item.summary}}</text>
+      </view>
+      <text class="friend-note" wx:if="{{item.note}}">📝 {{item.note}}</text>
+      <view class="friend-actions">
+        <view class="action-btn primary" data-name="{{item.name}}" bindtap="compareFriend">🔍 对比</view>
+        <view class="action-btn ghost" data-name="{{item.name}}" bindtap="editNote">📝 备注</view>
+        <view class="action-btn danger" data-name="{{item.name}}" bindtap="removeFriend">🗑 删除</view>
+      </view>
+    </view>
+  </view>
+
+</view>

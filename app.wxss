@@ -1,0 +1,242 @@
+/* 全局样式 */
+page {
+  background: #f3f4f6;
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  color: #1f2937;
+  box-sizing: border-box;
+}
+
+/* 确保输入框继承字体 */
+view, text, input, textarea, button {
+  font-family: inherit;
+}
+
+/* 页面容器 */
+.page-wrap {
+  min-height: 100vh;
+  background: #f3f4f6;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 进度条 */
+.progress-wrap {
+  background: #e5e7eb;
+  border-radius: 8rpx;
+  height: 10rpx;
+  margin: 20rpx 0 30rpx;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: #7c3aed;
+  height: 10rpx;
+  border-radius: 8rpx;
+  transition: width 0.25s ease;
+}
+
+/* 按钮 */
+.btn {
+  display: block;
+  border-radius: 14rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 16rpx;
+  border: none;
+  line-height: 1.4;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-primary {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-danger {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+/* 选项按钮 */
+.opt-item {
+  background: #f9fafb;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 14rpx;
+  padding: 26rpx 28rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+}
+
+.opt-item:active {
+  background: #ede9fe;
+  border-color: #7c3aed;
+}
+
+.opt-text {
+  font-size: 30rpx;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+/* 输入框 */
+input, textarea {
+  font-family: inherit;
+  line-height: 1.5;
+  font-style: normal;
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.input-field {
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 30rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24rpx;
+  background: #fff;
+  color: #1f2937;
+}
+
+.input-field:focus {
+  border-color: #7c3aed;
+}
+
+/* 文字样式 */
+.page-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #6b7280;
+  display: block;
+  line-height: 1.5;
+  margin-bottom: 16rpx;
+}
+
+.result-score-big {
+  font-size: 108rpx;
+  font-weight: bold;
+  color: #7c3aed;
+  text-align: center;
+  display: block;
+  padding: 16rpx 0;
+}
+
+.result-type {
+  font-size: 52rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin: 12rpx 0;
+}
+
+.result-nick {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #7c3aed;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.result-desc {
+  font-size: 29rpx;
+  color: #374151;
+  line-height: 1.65;
+  display: block;
+}
+
+.result-meta {
+  font-size: 26rpx;
+  color: #9ca3af;
+  display: block;
+  margin-top: 12rpx;
+}
+
+.section-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #7c3aed;
+  letter-spacing: 1rpx;
+  display: block;
+  margin-bottom: 12rpx;
+  text-transform: uppercase;
+}
+
+.error-msg {
+  font-size: 26rpx;
+  color: #ef4444;
+  display: block;
+  margin-top: 8rpx;
+}
+
+.tip-msg {
+  font-size: 26rpx;
+  color: #9ca3af;
+  display: block;
+  margin-top: 6rpx;
+}
+
+/* 手机号交接框 */
+.handoff-box {
+  background: #faf5ff;
+  border: 2rpx solid #ede9fe;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  text-align: center;
+  margin: 24rpx 0;
+}
+
+.handoff-emoji {
+  font-size: 72rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.handoff-msg {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #5b21b6;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.handoff-hint {
+  font-size: 26rpx;
+  color: #7c3aed;
+  display: block;
+}

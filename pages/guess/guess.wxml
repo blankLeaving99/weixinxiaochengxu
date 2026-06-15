@@ -1,0 +1,40 @@
+<view class="page-wrap">
+
+  <view wx:if="{{phase === 'pick'}}">
+    <view class="card">
+      <text class="section-title">🤝 猜猜 TA 是什么类型的人</text>
+      <text class="section-desc">选一位好友，回答 8 道题预测 TA 的 MBTI 类型，看你有多懂 TA！</text>
+    </view>
+
+    <view wx:if="{{isEmpty}}" class="card empty">
+      <text>还没有完成过 MBTI 的好友。让朋友导出 MBTI 结果给你后再来玩。</text>
+    </view>
+
+    <view class="friend-row" wx:for="{{eligibleList}}" wx:key="name">
+      <text class="friend-info">👤 {{item.name}}  ·  {{item.type}}</text>
+      <view class="start-btn" data-name="{{item.name}}" bindtap="startGuess">开始猜</view>
+    </view>
+  </view>
+
+  <view wx:elif="{{phase === 'question'}}">
+    <view class="card">
+      <text class="q-label">{{qLabel}}</text>
+      <text class="q-text">{{qText}}</text>
+    </view>
+    <view class="opt-item" bindtap="chooseA"><text class="opt-text">{{optA}}</text></view>
+    <view class="opt-item" bindtap="chooseB"><text class="opt-text">{{optB}}</text></view>
+  </view>
+
+  <view wx:elif="{{phase === 'result'}}">
+    <view class="card result-card">
+      <text class="result-label">🎯 猜测结果</text>
+      <text class="result-line">你猜 {{friendName}} 是：<text class="hl">{{guessed}}</text></text>
+      <text class="result-line">实际 TA 的类型：<text class="hl">{{actual}}</text></text>
+      <text class="result-hit">命中维度：{{same}} / 4</text>
+      <text class="result-score">{{score}}%</text>
+      <text class="result-comment">{{comment}}</text>
+    </view>
+    <button class="btn btn-primary" bindtap="playAgain">再玩一次</button>
+  </view>
+
+</view>

@@ -1,0 +1,45 @@
+<view class="page-wrap">
+
+  <!-- 输入阶段 -->
+  <view wx:if="{{phase === 'input'}}">
+    <view class="card">
+      <text class="page-title">⭐ 星座配对测试</text>
+      <text class="page-subtitle">输入两人生日，发现星座元素匹配度</text>
+      <text class="tip-msg">格式：月/日，例如 3/21 或 8-15</text>
+    </view>
+    <view class="card">
+      <text class="input-label">你的生日（月/日）</text>
+      <input class="input-field" placeholder="3/21" value="{{birthday1}}" bindinput="onB1Input" />
+      <text class="input-label">对方生日（月/日）</text>
+      <input class="input-field" placeholder="8/15" value="{{birthday2}}" bindinput="onB2Input" />
+      <text class="error-msg" wx:if="{{errorMsg}}">{{errorMsg}}</text>
+      <button class="btn btn-gold" bindtap="compute">开始匹配 ⭐</button>
+    </view>
+  </view>
+
+  <!-- 结果阶段 -->
+  <view wx:elif="{{phase === 'result'}}">
+    <view class="card result-card">
+      <view class="zodiac-row">
+        <view class="zodiac-box">
+          <text class="zodiac-sym">{{z1Sym}}</text>
+          <text class="zodiac-name">{{z1Name}}</text>
+          <text class="zodiac-elem">{{z1Elem}}元素</text>
+        </view>
+        <text class="heart-icon">❤</text>
+        <view class="zodiac-box">
+          <text class="zodiac-sym">{{z2Sym}}</text>
+          <text class="zodiac-name">{{z2Name}}</text>
+          <text class="zodiac-elem">{{z2Elem}}元素</text>
+        </view>
+      </view>
+      <text class="result-score-big">{{score}}</text>
+      <text class="result-score-unit">分</text>
+      <view class="divider"></view>
+      <text class="result-comment">{{comment}}</text>
+    </view>
+    <button class="btn btn-outline" bindtap="goBack">重新测试</button>
+    <button class="btn btn-gold" bindtap="finish">完成，回到主页</button>
+  </view>
+
+</view>

@@ -1,0 +1,85 @@
+<view class="page-wrap">
+
+  <!-- 顶部完成进度 -->
+  <view class="header-card" style="background: {{themeColor}}">
+    <text class="header-title">🧠 综合性格分析</text>
+    <text class="header-sub">已完成 {{doneCount}} / {{totalCount}} 项测试</text>
+    <view class="progress-wrap">
+      <view class="progress-bar" style="width: {{doneCount * 25}}%"></view>
+    </view>
+  </view>
+
+  <!-- 综合分析文本 -->
+  <view class="card analysis-card">
+    <text class="section-label" style="color: {{themeColor}}">✨ 专属分析</text>
+    <text class="analysis-text">{{analysis}}</text>
+  </view>
+
+  <!-- MBTI 结果 -->
+  <view class="card result-item" wx:if="{{hasMbti}}" bindtap="goMbti">
+    <view class="item-top">
+      <text class="item-icon">🔬</text>
+      <view class="item-info">
+        <text class="item-title" style="color: #2563eb">MBTI 职业性格</text>
+        <text class="item-tag" style="background: #eff6ff; color: #2563eb">{{mbti.type}} · {{mbti.nick}}</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+    <text class="item-desc">{{mbti.careers}}</text>
+  </view>
+  <view class="card result-empty" wx:else bindtap="goMbti">
+    <text class="empty-icon">🔬</text>
+    <text class="empty-text">MBTI 测试尚未完成，点击开始 →</text>
+  </view>
+
+  <!-- 恋爱默契 -->
+  <view class="card result-item" wx:if="{{hasLove}}" bindtap="goLove">
+    <view class="item-top">
+      <text class="item-icon">💕</text>
+      <view class="item-info">
+        <text class="item-title" style="color: #ec4899">恋爱默契</text>
+        <text class="item-tag" style="background: #fdf2f8; color: #ec4899">{{love.a}} ❤ {{love.b}} · {{love.score}}%</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+    <text class="item-desc">{{love.comment}}</text>
+  </view>
+  <view class="card result-empty" wx:else bindtap="goLove">
+    <text class="empty-icon">💕</text>
+    <text class="empty-text">恋爱默契测试尚未完成，点击开始 →</text>
+  </view>
+
+  <!-- 星座配对 -->
+  <view class="card result-item" wx:if="{{hasZodiac}}" bindtap="goZodiac">
+    <view class="item-top">
+      <text class="item-icon">⭐</text>
+      <view class="item-info">
+        <text class="item-title" style="color: #f59e0b">星座配对</text>
+        <text class="item-tag" style="background: #fffbeb; color: #b45309">{{zodiac.z1}} × {{zodiac.z2}} · {{zodiac.score}}分</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+    <text class="item-desc">{{zodiac.comment}}</text>
+  </view>
+  <view class="card result-empty" wx:else bindtap="goZodiac">
+    <text class="empty-icon">⭐</text>
+    <text class="empty-text">星座配对测试尚未完成，点击开始 →</text>
+  </view>
+
+  <!-- 口味人格 -->
+  <view class="card result-item" wx:if="{{hasTaste}}" bindtap="goTaste">
+    <view class="item-top">
+      <text class="item-icon">🍜</text>
+      <view class="item-info">
+        <text class="item-title" style="color: #10b981">口味人格</text>
+        <text class="item-tag" style="background: #f0fdf4; color: #065f46">{{taste.name}}</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+  </view>
+  <view class="card result-empty" wx:else bindtap="goTaste">
+    <text class="empty-icon">🍜</text>
+    <text class="empty-text">口味匹配测试尚未完成，点击开始 →</text>
+  </view>
+
+</view>

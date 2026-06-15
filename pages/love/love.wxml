@@ -1,0 +1,59 @@
+<view class="page-wrap">
+
+  <!-- 设置阶段：输入玩家昵称 -->
+  <view wx:if="{{phase === 'setup'}}">
+    <view class="card">
+      <text class="page-title">💕 恋爱默契大挑战</text>
+      <text class="page-subtitle">规则：两位玩家依次作答 12 道题目，对方作答时请勿偷看哦~</text>
+    </view>
+    <view class="card">
+      <text class="input-label">玩家 A 昵称</text>
+      <input class="input-field" placeholder="小明" value="{{playerAName}}" bindinput="onNameAInput" />
+      <text class="input-label">玩家 B 昵称</text>
+      <input class="input-field" placeholder="小红" value="{{playerBName}}" bindinput="onNameBInput" />
+      <button class="btn btn-pink" bindtap="startChallenge">开始挑战 💕</button>
+    </view>
+  </view>
+
+  <!-- 交接阶段 -->
+  <view wx:elif="{{phase === 'handoff'}}">
+    <view class="card">
+      <view class="handoff-box">
+        <text class="handoff-emoji">📱</text>
+        <text class="handoff-msg">{{handoffMsg}}</text>
+        <text class="handoff-hint">另一位玩家请暂时回避，准备好后再点击下方按钮</text>
+      </view>
+      <button class="btn btn-pink" bindtap="readyToAnswer">我准备好了 ✓</button>
+    </view>
+  </view>
+
+  <!-- 答题阶段 -->
+  <view wx:elif="{{phase === 'question'}}">
+    <view class="card">
+      <text class="q-player">{{qProgress}}</text>
+      <text class="q-text">{{qText}}</text>
+    </view>
+    <view
+      class="opt-item"
+      wx:for="{{options}}"
+      wx:key="index"
+      bindtap="chooseOption"
+      data-index="{{index}}"
+    >
+      <text class="opt-text">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 结果阶段 -->
+  <view wx:elif="{{phase === 'result'}}">
+    <view class="card result-card">
+      <text class="result-names">{{playerAName}} ❤ {{playerBName}}</text>
+      <text class="result-score-big">{{score}}%</text>
+      <text class="result-match-label">匹配题数：{{matchCount}} / 12</text>
+      <view class="divider"></view>
+      <text class="result-comment">{{comment}}</text>
+    </view>
+    <button class="btn btn-pink" bindtap="finish">完成，回到主页</button>
+  </view>
+
+</view>

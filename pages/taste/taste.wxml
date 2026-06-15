@@ -1,0 +1,40 @@
+<view class="page-wrap">
+  <!-- 进度条 -->
+  <view class="progress-wrap">
+    <view class="progress-bar" style="width: {{progress}}%"></view>
+  </view>
+
+  <!-- 答题阶段 -->
+  <view wx:if="{{phase === 'question'}}">
+    <view class="card">
+      <text class="q-num">{{qNum}}</text>
+      <text class="q-text">{{qText}}</text>
+    </view>
+    <view
+      class="opt-item"
+      wx:for="{{options}}"
+      wx:key="index"
+      bindtap="choose"
+      data-dim="{{item.dim}}"
+    >
+      <text class="opt-text">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- 结果阶段 -->
+  <view wx:elif="{{phase === 'result'}}">
+    <view class="card result-card">
+      <text class="result-label">🍜 你的美食人格</text>
+      <text class="result-type">{{typeName}}</text>
+      <view class="divider"></view>
+      <text class="result-desc">{{typeDesc}}</text>
+      <view class="match-box">
+        <text class="match-text">💞 {{typeMatch}}</text>
+      </view>
+      <view class="divider"></view>
+      <text class="stats-label">维度分布</text>
+      <text class="stats-text">{{statsStr}}</text>
+    </view>
+    <button class="btn btn-green" bindtap="finish">完成，回到主页</button>
+  </view>
+</view>

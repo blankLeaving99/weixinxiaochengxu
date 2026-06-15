@@ -1,0 +1,59 @@
+<view class="page-wrap">
+
+  <!-- 测试列表 -->
+  <view wx:if="{{phase === 'list'}}" class="list">
+    <view class="list-header">
+      <text class="list-title">趣味心理测试</text>
+      <text class="list-desc">选择一个测试开始吧</text>
+    </view>
+
+    <view class="test-list">
+      <view class="test-item" wx:for="{{tests}}" wx:key="id" bindtap="selectTest" data-idx="{{index}}">
+        <text class="test-icon">{{item.icon}}</text>
+        <view class="test-info">
+          <text class="test-name">{{item.title}}</text>
+          <text class="test-desc">{{item.desc}}</text>
+        </view>
+        <text class="test-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 答题页 -->
+  <view wx:elif="{{phase === 'quiz'}}" class="quiz">
+    <view class="progress-wrap">
+      <view class="progress-bar" style="width: {{progress}}%"></view>
+    </view>
+    <text class="quiz-count">{{current + 1}} / {{total}}</text>
+
+    <view class="question-card">
+      <text class="question-text">{{question}}</text>
+    </view>
+
+    <view class="options">
+      <view class="option-item" wx:for="{{options}}" wx:key="idx" bindtap="selectOption" data-score="{{item.score}}">
+        <text class="option-letter">{{item.letter}}</text>
+        <text class="option-text">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 结果页 -->
+  <view wx:else class="result">
+    <view class="result-card">
+      <text class="result-emoji">{{result.emoji}}</text>
+      <text class="result-level" style="color: {{result.color}}">{{result.level}}</text>
+      <view class="score-circle" style="border-color: {{result.color}}">
+        <text class="score-num">{{score}}</text>
+        <text class="score-unit">分</text>
+      </view>
+      <text class="result-desc">{{result.desc}}</text>
+    </view>
+
+    <view class="btn-group">
+      <button class="btn btn-primary" bindtap="backToList">测试其他</button>
+      <button class="btn btn-secondary" bindtap="goBack">返回首页</button>
+    </view>
+  </view>
+
+</view>

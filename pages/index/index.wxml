@@ -1,0 +1,109 @@
+<view class="header" style="background: {{themeColor}}">
+  <view class="header-inner">
+    <text class="header-emoji">✨</text>
+    <view class="header-text">
+      <text class="header-title">性格测试套件</text>
+      <text class="header-sub">5 大测试 · 8 个进阶模块</text>
+    </view>
+  </view>
+</view>
+
+<view class="page-wrap">
+
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" circular="{{true}}" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff">
+    <swiper-item wx:for="{{banners}}" wx:key="title" bindtap="onBannerTap" data-page="{{item.page}}">
+      <view class="banner-item" style="background: {{item.bg}}">
+        <view class="banner-content">
+          <text class="banner-icon">{{item.icon}}</text>
+          <view class="banner-text">
+            <text class="banner-title">{{item.title}}</text>
+            <text class="banner-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 等级卡片 -->
+  <view class="level-card">
+    <view class="level-left">
+      <text class="level-icon">{{levelIcon}}</text>
+      <view class="level-info">
+        <text class="level-title">Lv.{{level}} {{levelTitle}}</text>
+        <view class="xp-bar-wrap">
+          <view class="xp-bar" style="width: {{xpProgress}}%; background: {{themeColor}}"></view>
+        </view>
+        <text class="xp-text">{{xpCurrent}}/{{xpNeeded}} XP</text>
+      </view>
+    </view>
+    <view class="level-right">
+      <text class="total-xp">{{totalXp}}</text>
+      <text class="total-xp-label">总积分</text>
+    </view>
+  </view>
+
+  <!-- 统计徽章 -->
+  <view class="stat-row">
+    <view class="stat-item">
+      <text class="stat-num">{{doneCount}}/{{totalCount}}</text>
+      <text class="stat-lbl">测试</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">{{achGot}}/{{achTotal}}</text>
+      <text class="stat-lbl">成就</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">🔥 {{streak}}</text>
+      <text class="stat-lbl">打卡</text>
+    </view>
+  </view>
+
+  <!-- 快捷工具网格 -->
+  <view class="section-header">
+    <text class="section-title">快捷工具</text>
+  </view>
+  <view class="grid-wrap">
+    <view class="grid-item" wx:for="{{tools}}" wx:key="label" data-page="{{item.page}}" bindtap="goTool">
+      <view class="grid-icon-wrap" style="background: {{item.bg}}">
+        <text class="grid-icon">{{item.icon}}</text>
+      </view>
+      <text class="grid-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- 热门测试 -->
+  <view class="section-header">
+    <text class="section-title">热门测试</text>
+    <text class="section-more" bindtap="goAllTests">查看全部</text>
+  </view>
+
+  <!-- 5 大测试卡片 -->
+  <view
+    class="test-card"
+    wx:for="{{tests}}"
+    wx:key="key"
+    bindtap="goToTest"
+    data-page="{{item.page}}"
+  >
+    <view class="card-top">
+      <text class="card-icon">{{item.icon}}</text>
+      <view class="card-meta">
+        <text class="card-title" style="color: {{item.color}}">{{item.title}}</text>
+        <text class="card-status" style="color: {{item.statusColor}}">{{item.status}}</text>
+      </view>
+    </view>
+    <text class="card-desc">{{item.desc}}</text>
+    <view class="summary-box" wx:if="{{item.hasSummary}}">
+      <text class="summary-text">{{item.summary}}</text>
+    </view>
+    <view class="action-bar" style="background: {{item.color}}">
+      <text class="action-text">{{item.btnText}}  →</text>
+    </view>
+  </view>
+
+  <view class="footer-row">
+    <text class="footer-hint">💾 数据仅存储在本地设备</text>
+    <text class="footer-danger" bindtap="clearData">清除测试结果</text>
+  </view>
+</view>

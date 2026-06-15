@@ -1,0 +1,139 @@
+<view class="page-wrap">
+
+  <!-- 今日心情记录 -->
+  <view class="card record-card">
+    <text class="card-title">📝 记录今天的心情</text>
+    <text class="card-date">{{today}}</text>
+
+    <view class="mood-selector">
+      <view class="mood-option {{selectedMood === item.value ? 'selected' : ''}}" wx:for="{{moods}}" wx:key="value" bindtap="selectMood" data-value="{{item.value}}">
+        <text class="mood-emoji">{{item.emoji}}</text>
+        <text class="mood-label">{{item.label}}</text>
+      </view>
+    </view>
+
+    <view class="tags-section">
+      <text class="section-label" style="color: {{themeColor}}">选择标签（最多5个）</text>
+      <view class="tags-wrap">
+        <view class="tag-item {{selectedTags.includes(item) ? 'selected' : ''}}" wx:for="{{moodTags}}" wx:key="*this" bindtap="toggleTag" data-tag="{{item}}">
+          <text class="tag-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="note-section">
+      <text class="section-label" style="color: {{themeColor}}">写点什么...</text>
+      <textarea class="note-input" placeholder="记录今天的心情..." value="{{note}}" bindinput="onNoteInput" maxlength="200" />
+    </view>
+
+    <button class="btn btn-primary" bindtap="saveMood">💾 保存心情 +10XP</button>
+  </view>
+
+  <!-- 今日已记录 -->
+  <view wx:if="{{todayRecord}}" class="card today-card">
+    <text class="card-title">✅ 今日已记录</text>
+    <view class="today-mood">
+      <text class="today-emoji">{{moods[todayRecord.mood - 1].emoji}}</text>
+      <text class="today-label">{{moods[todayRecord.mood - 1].label}}</text>
+    </view>
+    <view wx:if="{{todayRecord.tags.length > 0}}" class="today-tags">
+      <text class="tag-item" wx:for="{{todayRecord.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+    <text wx:if="{{todayRecord.note}}" class="today-note">{{todayRecord.note}}</text>
+  </view>
+
+  <!-- 本周心情 -->
+  <view class="card week-card">
+    <text class="card-title">📊 本周心情</text>
+    <view class="week-chart">
+      <view class="week-day" wx:for="{{weekData}}" wx:key="date">
+        <text class="week-emoji">{{item.emoji || '·'}}</text>
+        <text class="week-label {{item.isToday ? 'today' : ''}}">{{item.day}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 本月心情热力图 -->
+  <view class="card month-card">
+    <text class="card-title">📅 本月心情</text>
+    <view class="month-grid">
+      <view class="month-day" wx:for="{{monthData}}" wx:key="date" style="background: {{item.color}}">
+        <text class="month-day-text">{{item.day}}</text>
+      </view>
+    </view>
+    <view class="month-legend">
+      <view class="legend-item">
+        <view class="legend-color" style="background: #10b981"></view>
+        <text class="legend-text">开心</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color" style="background: #3b82f6"></view>
+        <text class="legend-text">平静</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color" style="background: #f59e0b"></view>
+        <text class="legend-text">一般</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color" style="background: #f97316"></view>
+        <text class="legend-text">低落</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-color" style="background: #ef4444"></view>
+        <text class="legend-text">难过</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 心情统计 -->
+  <view class="card stats-card">
+    <text class="card-title">📈 心情统计</text>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{stats.totalDays}}</text>
+        <text class="stat-label">记录天数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.avgMood}}</text>
+        <text class="stat-label">平均心情</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.happyDays}}</text>
+        <text class="stat-label">开心天数</text>
+      </view>
+    </view>
+
+    <view wx:if="{{stats.topTags.length > 0}}" class="top-tags">
+      <text class="section-label">最常见标签</text>
+      <view class="top-tags-list">
+        <view class="top-tag-item" wx:for="{{stats.topTags}}" wx:key="tag">
+          <text class="top-tag-name">{{item.tag}}</text>
+          <text class="top-tag-count">{{item.count}}次</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="card history-card" bindtap="toggleHistory">
+    <view class="history-header">
+      <text class="card-title">📋 历史记录</text>
+      <text class="history-toggle">{{showHistory ? '收起' : '展开'}}</text>
+    </view>
+    <view wx:if="{{showHistory}}" class="history-list">
+      <view class="history-item" wx:for="{{history}}" wx:key="date">
+        <view class="history-left">
+          <text class="history-date">{{item.date}}</text>
+          <view class="history-tags">
+            <text class="history-tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+          </view>
+        </view>
+        <text class="history-mood">{{moods[item.mood - 1].emoji}}</text>
+      </view>
+      <view wx:if="{{history.length === 0}}" class="empty-history">
+        <text class="empty-text">暂无记录</text>
+      </view>
+    </view>
+  </view>
+
+</view>

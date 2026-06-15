@@ -1,0 +1,37 @@
+<view class="page-wrap">
+  <!-- 进度条 -->
+  <view class="progress-wrap">
+    <view class="progress-bar" style="width: {{progress}}%"></view>
+  </view>
+
+  <!-- 答题阶段 -->
+  <view wx:if="{{phase === 'question'}}">
+    <view class="card">
+      <text class="q-num">{{qNum}}</text>
+      <text class="q-text">{{qText}}</text>
+    </view>
+
+    <view class="opt-item" bindtap="chooseA">
+      <text class="opt-text">{{optAText}}</text>
+    </view>
+    <view class="opt-item" bindtap="chooseB">
+      <text class="opt-text">{{optBText}}</text>
+    </view>
+  </view>
+
+  <!-- 结果阶段 -->
+  <view wx:elif="{{phase === 'result'}}">
+    <view class="card result-card">
+      <text class="section-title">测试完成 ✨</text>
+      <text class="result-type">{{mbtiType}}</text>
+      <text class="result-nick">{{mbtiNick}}</text>
+      <view class="divider"></view>
+      <text class="section-title">推荐职业方向</text>
+      <text class="result-desc">{{mbtiCareers}}</text>
+      <view class="divider"></view>
+      <text class="section-title">四维度统计</text>
+      <text class="result-meta">{{statsStr}}</text>
+    </view>
+    <button class="btn btn-primary" bindtap="finish">完成，回到主页</button>
+  </view>
+</view>

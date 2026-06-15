@@ -1,0 +1,17 @@
+<view class="page-wrap">
+  <view class="header">
+    <text class="header-title">🏆 与我最契合的朋友们</text>
+    <text class="header-sub">共 {{total}} 位好友</text>
+  </view>
+
+  <view wx:if="{{isEmpty}}" class="empty">
+    <text>还没有好友数据，请先到「好友管理」添加</text>
+  </view>
+
+  <view class="row" wx:for="{{list}}" wx:key="name">
+    <text class="medal">{{item.medal}}</text>
+    <text class="name">{{item.name}}</text>
+    <text wx:if="{{item.hasScore}}" class="score" style="color: {{item.scoreColor}}">{{item.score}} 分</text>
+    <text wx:else class="muted">数据不足</text>
+  </view>
+</view>

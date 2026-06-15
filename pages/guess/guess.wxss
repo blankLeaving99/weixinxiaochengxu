@@ -1,0 +1,159 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 28rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 1rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ec4899;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.section-desc {
+  font-size: 26rpx;
+  color: #6b7280;
+  line-height: 1.55;
+  display: block;
+}
+
+.empty {
+  font-size: 28rpx;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+.friend-row {
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 22rpx 24rpx;
+  margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+}
+
+.friend-info {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.start-btn {
+  background: #ec4899;
+  color: #fff;
+  font-size: 26rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 10rpx;
+  font-weight: 600;
+}
+
+.q-label {
+  font-size: 24rpx;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.q-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  line-height: 1.55;
+  display: block;
+}
+
+.opt-item {
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 14rpx;
+  padding: 26rpx 28rpx;
+  margin-bottom: 14rpx;
+}
+
+.opt-item:active {
+  background: #fdf2f8;
+  border-color: #ec4899;
+}
+
+.opt-text {
+  font-size: 30rpx;
+  color: #1f2937;
+}
+
+.result-card {
+  padding: 36rpx 28rpx;
+}
+
+.result-label {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #ec4899;
+  display: block;
+  margin-bottom: 18rpx;
+}
+
+.result-line {
+  font-size: 28rpx;
+  color: #374151;
+  display: block;
+  margin: 4rpx 0;
+}
+
+.hl {
+  color: #1f2937;
+  font-weight: bold;
+}
+
+.result-hit {
+  font-size: 30rpx;
+  color: #1f2937;
+  font-weight: bold;
+  display: block;
+  margin-top: 16rpx;
+}
+
+.result-score {
+  font-size: 92rpx;
+  font-weight: bold;
+  color: #ec4899;
+  display: block;
+  margin: 6rpx 0;
+}
+
+.result-comment {
+  font-size: 28rpx;
+  color: #6b7280;
+  display: block;
+}
+
+.btn {
+  border-radius: 14rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16rpx;
+}
+
+.btn::after { border: none; }
+
+.btn-primary {
+  background: #ec4899;
+  color: #fff;
+}

@@ -1,0 +1,67 @@
+<view class="page-wrap">
+
+  <!-- 介绍页 -->
+  <view wx:if="{{phase === 'intro'}}" class="intro">
+    <view class="intro-card">
+      <text class="intro-emoji">🧠</text>
+      <text class="intro-title">智商测试</text>
+      <text class="intro-desc">15道逻辑推理题测出你的智商</text>
+      <view class="intro-features">
+        <view class="intro-feature">
+          <text class="feature-icon">⏱</text>
+          <text class="feature-text">约5分钟</text>
+        </view>
+        <view class="intro-feature">
+          <text class="feature-icon">📝</text>
+          <text class="feature-text">15道题</text>
+        </view>
+        <view class="intro-feature">
+          <text class="feature-icon">🧩</text>
+          <text class="feature-text">逻辑推理</text>
+        </view>
+      </view>
+      <button class="btn btn-primary" bindtap="startTest">开始测试</button>
+    </view>
+  </view>
+
+  <!-- 答题页 -->
+  <view wx:elif="{{phase === 'quiz'}}" class="quiz">
+    <view class="progress-wrap">
+      <view class="progress-bar" style="width: {{progress}}%"></view>
+    </view>
+    <text class="quiz-count">{{current + 1}} / {{total}}</text>
+
+    <view class="question-card">
+      <text class="question-text">{{question}}</text>
+    </view>
+
+    <view class="options">
+      <view class="option-item {{showAnswer && item.idx === correctIdx ? 'correct' : ''}} {{showAnswer && item.idx === selectedIdx && item.idx !== correctIdx ? 'wrong' : ''}}" wx:for="{{options}}" wx:key="idx" bindtap="selectOption" data-idx="{{item.idx}}">
+        <text class="option-letter">{{item.letter}}</text>
+        <text class="option-text">{{item.text}}</text>
+        <text wx:if="{{showAnswer && item.idx === correctIdx}}" class="option-icon">✓</text>
+        <text wx:if="{{showAnswer && item.idx === selectedIdx && item.idx !== correctIdx}}" class="option-icon wrong-icon">✗</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 结果页 -->
+  <view wx:else class="result">
+    <view class="result-card">
+      <text class="result-emoji">{{emoji}}</text>
+      <text class="result-level" style="color: {{color}}">{{level}}</text>
+      <view class="iq-circle" style="border-color: {{color}}">
+        <text class="iq-num">{{iq}}</text>
+        <text class="iq-label">IQ</text>
+      </view>
+      <text class="result-stat">答对 {{correctCount}} / {{total}} 题</text>
+      <text class="result-desc">{{desc}}</text>
+    </view>
+
+    <view class="btn-group">
+      <button class="btn btn-primary" bindtap="retry">重新测试</button>
+      <button class="btn btn-secondary" bindtap="goBack">返回首页</button>
+    </view>
+  </view>
+
+</view>

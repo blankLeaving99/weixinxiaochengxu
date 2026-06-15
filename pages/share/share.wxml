@@ -1,0 +1,38 @@
+<view class="page-wrap">
+  <view class="head">
+    <text class="head-title">🎴 选择要导出的测试结果</text>
+    <text class="head-sub">生成精美图片，可保存到相册分享给朋友</text>
+  </view>
+
+  <view wx:if="{{isEmpty}}" class="empty">
+    <text>请先完成至少一项测试</text>
+  </view>
+
+  <view class="card-row" wx:for="{{list}}" wx:key="key">
+    <text class="card-icon">{{item.icon}}</text>
+    <view class="card-info">
+      <text class="card-title" style="color: {{item.c1}}">{{item.title}}</text>
+      <text class="card-summary">{{item.summary}}</text>
+    </view>
+    <view class="gen-btn" style="background: {{item.c1}}" data-key="{{item.key}}" bindtap="generate">导出</view>
+  </view>
+
+  <!-- 隐藏 Canvas -->
+  <canvas
+    type="2d"
+    id="shareCanvas"
+    style="width: 750px; height: 1125px; position: fixed; left: -9999px; top: 0;"
+  ></canvas>
+
+  <!-- 预览弹层 -->
+  <view class="modal" wx:if="{{showCard}}" bindtap="closeCard">
+    <view class="modal-inner" catchtap>
+      <image class="preview" src="{{cardImage}}" mode="widthFix" show-menu-by-longpress="true" />
+      <view class="modal-actions">
+        <view class="modal-btn primary" catchtap="saveImage">💾 保存到相册</view>
+        <view class="modal-btn ghost" catchtap="closeCard">关闭</view>
+      </view>
+      <text class="modal-tip">长按图片可直接保存或转发给微信好友</text>
+    </view>
+  </view>
+</view>

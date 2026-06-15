@@ -1,0 +1,22 @@
+<view class="page-wrap">
+  <view class="head-card" style="background: {{themeColor}}">
+    <text class="head-title">🏆 已获得 {{got}} / {{total}}</text>
+    <view class="progress-wrap">
+      <view class="progress-bar" style="width: {{pct}}%"></view>
+    </view>
+    <text class="head-pct">{{pct}}%</text>
+  </view>
+
+  <view class="grid">
+    <view
+      class="badge {{item.got ? 'badge-on' : 'badge-off'}}"
+      wx:for="{{items}}"
+      wx:key="id"
+    >
+      <text class="badge-icon">{{item.icon}}</text>
+      <text class="badge-title">{{item.title}}</text>
+      <text class="badge-desc">{{item.desc}}</text>
+      <text class="badge-ts" wx:if="{{item.ts}}">获得于 {{item.ts}}</text>
+    </view>
+  </view>
+</view>

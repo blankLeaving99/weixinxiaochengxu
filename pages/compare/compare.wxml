@@ -1,0 +1,20 @@
+<view class="page-wrap">
+  <view class="header">
+    <text class="header-title">{{myName}}  ❤  {{friendName}}</text>
+  </view>
+
+  <view class="card" wx:for="{{cards}}" wx:key="title">
+    <view class="card-top">
+      <text class="card-title">{{item.title}}</text>
+      <text wx:if="{{item.score !== null}}" class="card-score" style="color: {{item.scoreColor}}">{{item.score}} 分</text>
+      <text wx:else class="card-score muted">数据不足</text>
+    </view>
+    <text class="card-detail">{{item.detail}}</text>
+  </view>
+
+  <view class="overall-card" wx:if="{{overall !== null}}">
+    <text class="overall-label">💝 综合契合度</text>
+    <text class="overall-score">{{overall}}</text>
+    <text class="overall-comment">{{overallComment}}</text>
+  </view>
+</view>

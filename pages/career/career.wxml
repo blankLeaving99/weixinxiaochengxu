@@ -1,0 +1,66 @@
+<view class="page-wrap">
+
+  <view wx:if="{{phase === 'intro'}}" class="intro">
+    <view class="intro-card">
+      <text class="intro-emoji">💼</text>
+      <text class="intro-title">职业倾向测试</text>
+      <text class="intro-desc">发现适合你的职业方向</text>
+      <view class="intro-features">
+        <view class="intro-feature">
+          <text class="feature-icon">⏱</text>
+          <text class="feature-text">约3分钟</text>
+        </view>
+        <view class="intro-feature">
+          <text class="feature-icon">📝</text>
+          <text class="feature-text">10道题</text>
+        </view>
+        <view class="intro-feature">
+          <text class="feature-icon">💼</text>
+          <text class="feature-text">职业推荐</text>
+        </view>
+      </view>
+      <button class="btn btn-primary" bindtap="startTest">开始测试</button>
+    </view>
+  </view>
+
+  <view wx:elif="{{phase === 'quiz'}}" class="quiz">
+    <view class="progress-wrap">
+      <view class="progress-bar" style="width: {{progress}}%"></view>
+    </view>
+    <text class="quiz-count">{{current + 1}} / {{total}}</text>
+
+    <view class="question-card">
+      <text class="question-text">{{question}}</text>
+    </view>
+
+    <view class="options">
+      <view class="option-item" wx:for="{{options}}" wx:key="idx" bindtap="selectOption" data-type="{{item.type}}">
+        <text class="option-letter">{{item.letter}}</text>
+        <text class="option-text">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="result">
+    <view class="result-card">
+      <text class="result-emoji">{{result.emoji}}</text>
+      <text class="result-name" style="color: {{result.color}}">{{result.name}}</text>
+      <text class="result-desc">{{result.desc}}</text>
+
+      <view class="careers-wrap">
+        <text class="careers-title">推荐职业</text>
+        <view class="careers">
+          <view class="career-tag" wx:for="{{result.careers}}" wx:key="*this">
+            <text class="career-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-group">
+      <button class="btn btn-primary" bindtap="retry">重新测试</button>
+      <button class="btn btn-secondary" bindtap="goBack">返回首页</button>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,76 @@
+<view class="page-wrap">
+
+  <!-- 未完成测试提示 -->
+  <view wx:if="{{!hasResults}}" class="empty">
+    <text class="empty-emoji">🎯</text>
+    <text class="empty-title">个性化推荐</text>
+    <text class="empty-desc">完成测试后，我们将为你推荐专属内容</text>
+    <button class="btn btn-primary" bindtap="goTest">去完成测试</button>
+  </view>
+
+  <!-- 推荐内容 -->
+  <block wx:else>
+    <view class="header-card" style="background: {{themeColor}}">
+      <text class="header-title">{{profileName}} 的专属推荐</text>
+      <text class="header-sub" wx:if="{{mbtiType}}">基于你的 {{mbtiType}} 人格类型</text>
+      <text class="header-sub" wx:elif="{{zodiacName}}">基于你的 {{zodiacName}} 星座</text>
+    </view>
+
+    <!-- 今日运势 -->
+    <view wx:if="{{fortune}}" class="card fortune-card">
+      <text class="card-title">🔮 今日运势</text>
+      <view class="fortune-grid">
+        <view class="fortune-item">
+          <text class="fortune-label">幸运色</text>
+          <text class="fortune-value">{{fortune.lucky}}</text>
+        </view>
+        <view class="fortune-item">
+          <text class="fortune-label">今日心情</text>
+          <text class="fortune-value">{{fortune.mood}}</text>
+        </view>
+        <view class="fortune-item">
+          <text class="fortune-label">幸运数字</text>
+          <text class="fortune-value">{{fortune.luckyNum}}</text>
+        </view>
+      </view>
+      <text class="fortune-advice">💡 {{fortune.advice}}</text>
+    </view>
+
+    <!-- 音乐推荐 -->
+    <view class="card">
+      <text class="card-title">🎵 音乐推荐</text>
+      <text class="card-desc">适合你人格类型的音乐</text>
+      <view class="rec-list">
+        <view class="rec-item" wx:for="{{musicRecs}}" wx:key="*this">
+          <text class="rec-num">{{index + 1}}</text>
+          <text class="rec-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 电影推荐 -->
+    <view class="card">
+      <text class="card-title">🎬 电影推荐</text>
+      <text class="card-desc">你会喜欢的电影</text>
+      <view class="rec-list">
+        <view class="rec-item" wx:for="{{movieRecs}}" wx:key="*this">
+          <text class="rec-num">{{index + 1}}</text>
+          <text class="rec-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 书籍推荐 -->
+    <view class="card">
+      <text class="card-title">📚 书籍推荐</text>
+      <text class="card-desc">提升自我的好书</text>
+      <view class="rec-list">
+        <view class="rec-item" wx:for="{{bookRecs}}" wx:key="*this">
+          <text class="rec-num">{{index + 1}}</text>
+          <text class="rec-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+</view>

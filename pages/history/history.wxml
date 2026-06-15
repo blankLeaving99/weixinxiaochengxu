@@ -1,0 +1,33 @@
+<view class="page-wrap">
+  <view wx:if="{{isEmpty}}" class="empty">
+    <text class="empty-icon">📈</text>
+    <text class="empty-text">还没有任何历史记录</text>
+    <text class="empty-hint">完成测试后会自动记录在这里</text>
+  </view>
+
+  <block wx:else>
+    <view class="stats-card">
+      <text class="stats-title">📊 总览</text>
+      <view class="stats-row">
+        <text class="stats-total">总测试次数：{{total}}</text>
+      </view>
+      <view class="stats-row">
+        <text class="stats-item" wx:for="{{counts}}" wx:key="name">
+          {{item.icon}} {{item.name}} ×{{item.count}}
+        </text>
+      </view>
+    </view>
+
+    <view class="timeline">
+      <view class="item" wx:for="{{items}}" wx:key="ts">
+        <text class="item-icon">{{item.icon}}</text>
+        <view class="item-info">
+          <text class="item-title" style="color: {{item.color}}">
+            {{item.name}}  ·  {{item.summary}}
+          </text>
+          <text class="item-ts">{{item.ts}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,71 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  border-radius: 20rpx;
+  padding: 36rpx 32rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+  display: block;
+}
+
+.header-sub {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  display: block;
+  margin-top: 6rpx;
+}
+
+.empty {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 60rpx 30rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #9ca3af;
+}
+
+.row {
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+}
+
+.medal {
+  font-size: 44rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  min-width: 60rpx;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1f2937;
+  flex: 1;
+}
+
+.score {
+  font-size: 34rpx;
+  font-weight: bold;
+}
+
+.muted {
+  font-size: 24rpx;
+  color: #9ca3af;
+}

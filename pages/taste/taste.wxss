@@ -1,0 +1,151 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.progress-wrap {
+  background: #e5e7eb;
+  border-radius: 8rpx;
+  height: 10rpx;
+  margin-bottom: 28rpx;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: #10b981;
+  height: 10rpx;
+  border-radius: 8rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.06);
+}
+
+.q-num {
+  font-size: 26rpx;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 14rpx;
+  font-weight: 500;
+}
+
+.q-text {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  line-height: 1.5;
+}
+
+.opt-item {
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  padding: 28rpx 32rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+}
+
+.opt-item:active {
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.opt-text {
+  font-size: 30rpx;
+  color: #1f2937;
+  line-height: 1.5;
+  display: block;
+}
+
+/* 结果 */
+.result-card {
+  padding: 36rpx 32rpx;
+}
+
+.result-label {
+  font-size: 26rpx;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.result-type {
+  font-size: 52rpx;
+  font-weight: bold;
+  color: #10b981;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f3f4f6;
+  margin: 24rpx 0;
+}
+
+.result-desc {
+  font-size: 30rpx;
+  color: #374151;
+  line-height: 1.65;
+  display: block;
+}
+
+.match-box {
+  background: #f0fdf4;
+  border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+  margin-top: 16rpx;
+}
+
+.match-text {
+  font-size: 28rpx;
+  color: #065f46;
+}
+
+.stats-label {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #10b981;
+  display: block;
+  margin-bottom: 10rpx;
+  letter-spacing: 2rpx;
+}
+
+.stats-text {
+  font-size: 28rpx;
+  color: #6b7280;
+  display: block;
+  font-family: monospace;
+  letter-spacing: 2rpx;
+}
+
+/* 按钮 */
+.btn {
+  display: block;
+  border-radius: 14rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 16rpx;
+  border: none;
+  line-height: 1.4;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-green {
+  background: #10b981;
+  color: #fff;
+}

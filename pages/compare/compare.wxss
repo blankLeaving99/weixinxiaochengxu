@@ -1,0 +1,94 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  background: linear-gradient(135deg, #ec4899 0%, #7c3aed 100%);
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.header-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #fff;
+  display: block;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 28rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1f2937;
+  flex: 1;
+}
+
+.card-score {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.card-score.muted {
+  font-size: 24rpx;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.card-detail {
+  font-size: 26rpx;
+  color: #6b7280;
+  line-height: 1.65;
+  display: block;
+  white-space: pre-line;
+}
+
+.overall-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  margin-top: 12rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.06);
+}
+
+.overall-label {
+  font-size: 28rpx;
+  color: #7c3aed;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.overall-score {
+  font-size: 132rpx;
+  font-weight: bold;
+  color: #ec4899;
+  display: block;
+  line-height: 1.1;
+}
+
+.overall-comment {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-top: 12rpx;
+}

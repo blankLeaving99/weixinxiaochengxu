@@ -1,0 +1,50 @@
+<view class="page-wrap">
+
+  <view wx:if="{{!hasResult}}" class="empty">
+    <text class="empty-emoji">🧠</text>
+    <text class="empty-title">MBTI 详细分析</text>
+    <text class="empty-desc">请先完成 MBTI 测试</text>
+    <button class="btn btn-primary" bindtap="goMbtiTest">去测试</button>
+  </view>
+
+  <block wx:else>
+    <view class="header-card" style="background: {{themeColor}}">
+      <text class="header-emoji">{{emoji}}</text>
+      <text class="header-type">{{mbtiType}}</text>
+      <text class="header-nickname">{{nickname}}</text>
+    </view>
+
+    <view class="card">
+      <text class="card-title">💪 你的优势</text>
+      <view class="trait-list">
+        <view class="trait-item" wx:for="{{strengths}}" wx:key="*this">
+          <text class="trait-icon">✅</text>
+          <text class="trait-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-title">⚠️ 需要注意</text>
+      <view class="trait-list">
+        <view class="trait-item" wx:for="{{weaknesses}}" wx:key="*this">
+          <text class="trait-icon">💡</text>
+          <text class="trait-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card love-card">
+      <text class="card-title">💕 恋爱建议</text>
+      <text class="card-text">{{love}}</text>
+    </view>
+
+    <view class="card career-card">
+      <text class="card-title">💼 职业建议</text>
+      <text class="card-text">{{career}}</text>
+    </view>
+
+    <button class="btn btn-secondary" bindtap="goBack">返回</button>
+  </block>
+
+</view>

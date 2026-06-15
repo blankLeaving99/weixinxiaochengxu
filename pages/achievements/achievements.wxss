@@ -1,0 +1,99 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.head-card {
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.head-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.progress-wrap {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8rpx;
+  height: 12rpx;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: #fff;
+  height: 12rpx;
+  border-radius: 8rpx;
+}
+
+.head-pct {
+  font-size: 26rpx;
+  color: #fff;
+  display: block;
+  margin-top: 8rpx;
+  font-weight: 600;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.badge {
+  width: 48%;
+  border-radius: 16rpx;
+  padding: 24rpx 18rpx;
+  margin-bottom: 16rpx;
+  border: 2rpx solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+.badge-on {
+  background: #fff;
+}
+
+.badge-off {
+  background: #f9fafb;
+  opacity: 0.65;
+}
+
+.badge-icon {
+  font-size: 56rpx;
+  display: block;
+  margin-bottom: 12rpx;
+  text-align: center;
+}
+
+.badge-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.badge-off .badge-title {
+  color: #9ca3af;
+}
+
+.badge-desc {
+  font-size: 22rpx;
+  color: #6b7280;
+  line-height: 1.5;
+  display: block;
+}
+
+.badge-ts {
+  font-size: 20rpx;
+  color: #10b981;
+  display: block;
+  margin-top: 8rpx;
+}

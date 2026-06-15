@@ -1,0 +1,69 @@
+<view class="page-wrap">
+
+  <!-- 介绍页 -->
+  <view wx:if="{{phase === 'intro'}}" class="intro">
+    <view class="intro-card">
+      <text class="intro-emoji">🎨</text>
+      <text class="intro-title">色彩性格测试</text>
+      <text class="intro-desc">通过颜色偏好揭示你的性格密码</text>
+      <view class="intro-features">
+        <view class="intro-feature">
+          <text class="feature-icon">⏱</text>
+          <text class="feature-text">约2分钟</text>
+        </view>
+        <view class="intro-feature">
+          <text class="feature-icon">📝</text>
+          <text class="feature-text">8道题</text>
+        </view>
+        <view class="intro-feature">
+          <text class="feature-icon">🎨</text>
+          <text class="feature-text">趣味测试</text>
+        </view>
+      </view>
+      <button class="btn btn-primary" bindtap="startTest">开始测试</button>
+    </view>
+  </view>
+
+  <!-- 答题页 -->
+  <view wx:elif="{{phase === 'quiz'}}" class="quiz">
+    <view class="progress-wrap">
+      <view class="progress-bar" style="width: {{progress}}%"></view>
+    </view>
+    <text class="quiz-count">{{current + 1}} / {{total}}</text>
+
+    <view class="question-card">
+      <text class="question-text">{{question}}</text>
+    </view>
+
+    <view class="options">
+      <view class="option-item" wx:for="{{options}}" wx:key="idx" bindtap="selectOption" data-color="{{item.color}}">
+        <view class="color-dot" style="background: {{item.color === 'R' ? '#ef4444' : item.color === 'B' ? '#3b82f6' : item.color === 'G' ? '#10b981' : item.color === 'Y' ? '#f59e0b' : item.color === 'P' ? '#8b5cf6' : '#e5e7eb'}}"></view>
+        <text class="option-text">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 结果页 -->
+  <view wx:else class="result">
+    <view class="result-card">
+      <text class="result-emoji">{{result.emoji}}</text>
+      <text class="result-name">{{result.name}}</text>
+      <text class="result-desc">{{result.desc}}</text>
+
+      <view class="traits-wrap">
+        <text class="traits-title">你的特质</text>
+        <view class="traits">
+          <view class="trait-tag" wx:for="{{result.traits}}" wx:key="*this">
+            <text class="trait-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-group">
+      <button class="btn btn-primary" bindtap="retry">重新测试</button>
+      <button class="btn btn-secondary" bindtap="goBack">返回首页</button>
+    </view>
+  </view>
+
+</view>

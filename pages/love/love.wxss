@@ -1,0 +1,182 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.06);
+}
+
+.page-title {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #6b7280;
+  line-height: 1.6;
+  display: block;
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.input-field {
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 30rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24rpx;
+  background: #fafafa;
+}
+
+/* 交接提示 */
+.handoff-box {
+  background: #fff0f6;
+  border: 2rpx solid #fce7f3;
+  border-radius: 16rpx;
+  padding: 36rpx;
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.handoff-emoji {
+  font-size: 72rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.handoff-msg {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #be185d;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.handoff-hint {
+  font-size: 26rpx;
+  color: #ec4899;
+  display: block;
+}
+
+/* 答题 */
+.q-player {
+  font-size: 26rpx;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 14rpx;
+  font-weight: 500;
+}
+
+.q-text {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  line-height: 1.5;
+}
+
+.opt-item {
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  padding: 28rpx 32rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 1rpx 6rpx rgba(0, 0, 0, 0.04);
+}
+
+.opt-item:active {
+  background: #fff0f6;
+  border-color: #ec4899;
+}
+
+.opt-text {
+  font-size: 30rpx;
+  color: #1f2937;
+  line-height: 1.5;
+  display: block;
+}
+
+/* 结果 */
+.result-card {
+  text-align: center;
+  padding: 40rpx 32rpx;
+}
+
+.result-names {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.result-score-big {
+  font-size: 110rpx;
+  font-weight: bold;
+  color: #ec4899;
+  display: block;
+  padding: 10rpx 0;
+}
+
+.result-match-label {
+  font-size: 28rpx;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f3f4f6;
+  margin: 24rpx 0;
+}
+
+.result-comment {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #ec4899;
+  display: block;
+}
+
+/* 按钮 */
+.btn {
+  display: block;
+  border-radius: 14rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 8rpx;
+  border: none;
+  line-height: 1.4;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-pink {
+  background: #ec4899;
+  color: #fff;
+}

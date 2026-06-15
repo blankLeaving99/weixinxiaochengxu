@@ -1,0 +1,409 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部统计卡片 */
+.header-card {
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.streak-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.streak-icon {
+  font-size: 48rpx;
+  margin-right: 12rpx;
+}
+
+.streak-num {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-right: 8rpx;
+}
+
+.streak-label {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.level-badge {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+  padding: 8rpx 16rpx;
+}
+
+.level-icon {
+  font-size: 28rpx;
+  margin-right: 6rpx;
+}
+
+.level-text {
+  font-size: 24rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+.header-date {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+  text-align: center;
+}
+
+/* 卡片通用 */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+/* 运势卡片 */
+.fortune-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.fortune-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.fortune-level {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.fortune-emoji {
+  font-size: 64rpx;
+  display: block;
+  text-align: center;
+  margin: 12rpx 0;
+}
+
+.fortune-desc {
+  font-size: 28rpx;
+  color: #92400e;
+  display: block;
+  text-align: center;
+  margin-bottom: 20rpx;
+  line-height: 1.6;
+}
+
+.fortune-lucky {
+  display: flex;
+  gap: 12rpx;
+}
+
+.lucky-item {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12rpx;
+  padding: 12rpx;
+  text-align: center;
+}
+
+.lucky-label {
+  font-size: 20rpx;
+  color: #92400e;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.lucky-value {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #78350f;
+  display: block;
+}
+
+/* 名言卡片 */
+.quote-card {
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  position: relative;
+}
+
+.quote-mark {
+  font-size: 80rpx;
+  color: #7c3aed;
+  opacity: 0.3;
+  position: absolute;
+  top: 10rpx;
+  left: 20rpx;
+}
+
+.quote-text {
+  font-size: 30rpx;
+  color: #374151;
+  line-height: 1.8;
+  display: block;
+  padding: 0 20rpx;
+  margin-bottom: 12rpx;
+  font-style: italic;
+}
+
+.quote-author {
+  font-size: 24rpx;
+  color: #6b7280;
+  display: block;
+  text-align: right;
+}
+
+/* 挑战卡片 */
+.challenge-card {
+  border-left: 6rpx solid #ec4899;
+}
+
+.challenge-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.challenge-icon {
+  font-size: 56rpx;
+  margin-right: 20rpx;
+}
+
+.challenge-info {
+  flex: 1;
+}
+
+.challenge-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.challenge-desc {
+  font-size: 26rpx;
+  color: #6b7280;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.challenge-reward {
+  font-size: 24rpx;
+  color: #ec4899;
+  font-weight: bold;
+  display: block;
+}
+
+.btn-challenge {
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  color: #fff;
+}
+
+.challenge-done {
+  background: #fce7f3;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  text-align: center;
+}
+
+.done-text {
+  font-size: 28rpx;
+  color: #ec4899;
+  font-weight: bold;
+}
+
+/* 问题卡片 */
+.question-card {
+  border-left: 6rpx solid #f59e0b;
+}
+
+.question-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+.answer-section {
+  position: relative;
+}
+
+.answer-input {
+  background: #f9fafb;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 160rpx;
+  margin-bottom: 8rpx;
+}
+
+.char-count {
+  font-size: 22rpx;
+  color: #9ca3af;
+  display: block;
+  text-align: right;
+  margin-bottom: 12rpx;
+}
+
+.done-section {
+  margin-top: 12rpx;
+}
+
+.done-banner {
+  background: #f0fdf4;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.done-icon {
+  font-size: 32rpx;
+  margin-right: 8rpx;
+}
+
+.done-msg {
+  font-size: 28rpx;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.my-answer {
+  background: #f9fafb;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  border-left: 4rpx solid #f59e0b;
+}
+
+.answer-label {
+  font-size: 24rpx;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.answer-text {
+  font-size: 28rpx;
+  color: #1f2937;
+  line-height: 1.6;
+  display: block;
+}
+
+/* 日历卡片 */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-toggle {
+  font-size: 24rpx;
+  color: #7c3aed;
+}
+
+.calendar-body {
+  margin-top: 16rpx;
+}
+
+.weekday-row {
+  display: flex;
+  margin-bottom: 12rpx;
+}
+
+.weekday {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  color: #9ca3af;
+  font-weight: bold;
+}
+
+.days-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-item {
+  width: 14.28%;
+  text-align: center;
+  padding: 8rpx 0;
+  position: relative;
+}
+
+.day-text {
+  font-size: 26rpx;
+  color: #374151;
+  display: block;
+}
+
+.day-item.today .day-text {
+  color: #7c3aed;
+  font-weight: bold;
+}
+
+.day-item.checked {
+  background: #ecfdf5;
+  border-radius: 8rpx;
+}
+
+.day-item.checked .day-text {
+  color: #10b981;
+}
+
+.check-mark {
+  font-size: 16rpx;
+  color: #10b981;
+  position: absolute;
+  bottom: 0;
+  right: 4rpx;
+}
+
+/* 按钮 */
+.btn {
+  border-radius: 14rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn::after { border: none; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+}

@@ -1,0 +1,168 @@
+.page-wrap {
+  background: #f3f4f6;
+  min-height: 100vh;
+  padding: 24rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.06);
+}
+
+.page-title {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #6b7280;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.tip-msg {
+  font-size: 26rpx;
+  color: #9ca3af;
+  display: block;
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.input-field {
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 30rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 24rpx;
+  background: #fafafa;
+}
+
+.error-msg {
+  font-size: 26rpx;
+  color: #ef4444;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+/* 结果 */
+.result-card {
+  text-align: center;
+  padding: 40rpx 32rpx;
+}
+
+.zodiac-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.zodiac-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180rpx;
+}
+
+.zodiac-sym {
+  font-size: 72rpx;
+  color: #7c3aed;
+  display: block;
+}
+
+.zodiac-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  margin-top: 6rpx;
+}
+
+.zodiac-elem {
+  font-size: 24rpx;
+  color: #9ca3af;
+  display: block;
+  margin-top: 4rpx;
+}
+
+.heart-icon {
+  font-size: 48rpx;
+  color: #ec4899;
+  margin: 0 24rpx;
+  display: block;
+}
+
+.result-score-big {
+  font-size: 108rpx;
+  font-weight: bold;
+  color: #f59e0b;
+  display: inline;
+}
+
+.result-score-unit {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #f59e0b;
+  display: inline;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f3f4f6;
+  margin: 24rpx 0;
+}
+
+.result-comment {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+  line-height: 1.5;
+}
+
+/* 按钮 */
+.btn {
+  display: block;
+  border-radius: 14rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: 16rpx;
+  border: none;
+  line-height: 1.4;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-gold {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.btn-outline {
+  background: #fff;
+  color: #374151;
+  border: 2rpx solid #e5e7eb !important;
+}
