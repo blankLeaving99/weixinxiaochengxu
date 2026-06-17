@@ -21,7 +21,7 @@ router.post('/search', auth, async (req, res) => {
     } else {
       // 按昵称模糊搜索
       ;[users] = await pool.query(
-        'SELECT id, nickname, avatar FROM users WHERE nickname LIKE ? AND id != ? AND discoverable = 1 LIMIT 50',
+        'SELECT id, nickname, avatar FROM users WHERE nickname LIKE ? AND id != ? AND (discoverable = 1 OR discoverable IS NULL) LIMIT 50',
         [`%${trimmed}%`, req.user.id]
       )
     }
