@@ -94,6 +94,15 @@ Page({
     } catch (e) {}
   },
 
+  copyId() {
+    wx.setClipboardData({
+      data: String(this.data.userId),
+      success: () => {
+        wx.showToast({ title: 'ID已复制', icon: 'success' })
+      }
+    })
+  },
+
   async toggleDiscoverable() {
     const newVal = !this.data.discoverable
     this.setData({ discoverable: newVal })

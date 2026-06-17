@@ -9,7 +9,7 @@
     </view>
     <view class="profile-info">
       <text class="profile-name">{{profileName || '点击设置昵称'}}</text>
-      <text class="profile-id">ID: {{userId}}</text>
+      <text class="profile-id" bindtap="copyId">ID: {{userId}} 📋</text>
       <view class="level-tag">
         <text class="level-tag-icon">{{levelIcon}}</text>
         <text class="level-tag-text">Lv.{{level}} {{levelTitle}}</text>
