@@ -154,6 +154,7 @@ Page({
       else overallComment = '差异较大，但互补也是吸引'
       // 完美匹配成就
       if (overall >= 90 && storage.unlockAchievement('perfect_match')) {
+        api.unlockAchievement('perfect_match').catch(() => {})
         setTimeout(() => {
           wx.showModal({
             title: '🎉 恭喜解锁新成就！',
