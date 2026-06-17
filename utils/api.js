@@ -213,7 +213,7 @@ async function addFriend(friendId) {
 }
 
 async function removeFriend(friendId) {
-  return request('DELETE', `/friends/${friendId}`, null, true)
+  return request('DELETE', `/friends/${friendId}`)
 }
 
 async function updateFriendNote(friendId, note) {

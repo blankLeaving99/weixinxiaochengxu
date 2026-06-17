@@ -284,9 +284,17 @@ Page({
       success: async (m) => {
         if (m.confirm) {
           if (id) {
-            try { await api.removeFriend(id) } catch (e) {}
+            try {
+              const res = await api.removeFriend(id)
+              if (res.code === 0) {
+                wx.showToast({ title: '已删除', icon: 'success' })
+              } else {
+                wx.showToast({ title: res.error || '删除失败', icon: 'none' })
+              }
+            } catch (e) {
+              wx.showToast({ title: '删除失败', icon: 'none' })
+            }
           }
-          storage.removeFriend(name)
           this.refreshList()
         }
       }
