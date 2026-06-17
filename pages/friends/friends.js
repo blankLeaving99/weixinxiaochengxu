@@ -333,14 +333,14 @@ Page({
     const friendId = e.currentTarget.dataset.id
     const friendName = e.currentTarget.dataset.name
 
-    wx.showActionSheet({
-      itemList: ['💕 恋爱默契大挑战', '⭐ 星座配对测试'],
-      success: async (res) => {
-        const testKeys = ['love', 'zodiac']
-        const testKey = testKeys[res.tapIndex]
-
+    wx.showModal({
+      title: '💕 发起挑战',
+      content: `向 ${friendName} 发起恋爱默契大挑战？`,
+      confirmText: '发起挑战',
+      success: async (m) => {
+        if (!m.confirm) return
         try {
-          const result = await api.createChallenge(friendId, testKey)
+          const result = await api.createChallenge(friendId, 'love')
           if (result.code === 0) {
             wx.showModal({
               title: '挑战已发送！',
