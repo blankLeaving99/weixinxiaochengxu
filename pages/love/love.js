@@ -61,7 +61,9 @@ Page({
 
   async loadHistory() {
     try {
+      console.log('[Love] loading history...')
       const res = await api.getChallenges()
+      console.log('[Love] history result:', JSON.stringify(res))
       if (res.code === 0 && res.challenges) {
         const historyList = res.challenges
           .filter(c => c.status === 'completed' && c.result)
@@ -143,18 +145,25 @@ Page({
 
     wx.showModal({
       title: '发起挑战',
-      content: `向 ${friendName} 发起恋爱默契大挑战？`,
-      confirmText: '发起',
+      content: `向 ${friendName} 发起恋爱默契大挑战？\n\n你需要先完成答题，对方收到通知后也会答题。`,
+      confirmText: '开始答题',
       success: async (m) => {
         if (!m.confirm) return
         try {
           const res = await api.createChallenge(friendId, 'love')
           if (res.code === 0) {
+            // 创建成功后，发起者先答题
             this.setData({
-              phase: 'waiting',
               challengeId: res.challengeId,
-              friendName,
-              waitingMsg: `挑战已发送给 ${friendName}，等待对方答题...`
+              friendName
+            })
+            // 获取自己的昵称
+            const user = api.getUser()
+            const myName = user ? (user.nickname || '我') : '我'
+            this.setData({
+              phase: 'setup',
+              playerAName: myName,
+              playerBName: friendName
             })
           } else {
             wx.showToast({ title: res.error || '发送失败', icon: 'none' })
@@ -310,8 +319,15 @@ Page({
     this.setData({ playerAName: nameA, playerBName: nameB })
     this.playerAAnswers = []
     this.playerBAnswers = []
-    this.currentPlayer = 'A'
-    this.showHandoff(`请把屏幕交给 ${nameA}`)
+
+    if (this.data.challengeId) {
+      // 远程模式：直接开始答题（不需要交接手机）
+      this.showQuestion(0)
+    } else {
+      // 本地模式：交接手机
+      this.currentPlayer = 'A'
+      this.showHandoff(`请把屏幕交给 ${nameA}`)
+    }
   },
 
   showHandoff(msg) {
