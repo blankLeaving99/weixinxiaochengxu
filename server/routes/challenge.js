@@ -51,14 +51,14 @@ router.get('/list', auth, async (req, res) => {
   }
 })
 
-// 获取待处理的挑战（别人发给我的）
+// 获取待处理的挑战（别人发给我的，且我还没答）
 router.get('/pending', auth, async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT c.*, u.nickname AS from_nickname
       FROM challenges c
       JOIN users u ON c.from_user_id = u.id
-      WHERE c.to_user_id = ? AND c.status = 'pending'
+      WHERE c.to_user_id = ? AND c.to_answers IS NULL AND c.status IN ('pending', 'accepted')
       ORDER BY c.created_at DESC
     `, [req.user.id])
 
