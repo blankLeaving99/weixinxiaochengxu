@@ -34,6 +34,8 @@ Page({
     challengeId: null,
     friendName: '',
     friendList: [],
+    // 历史记录
+    historyList: [],
     // 结果
     score: 0,
     matchCount: 0,
@@ -51,7 +53,37 @@ Page({
       const friendName = decodeURIComponent(options.friendName || '好友')
       this.setData({ challengeId, friendName })
       await this.loadChallenge(challengeId)
+    } else {
+      // 加载历史挑战记录
+      this.loadHistory()
     }
+  },
+
+  async loadHistory() {
+    try {
+      const res = await api.getChallenges()
+      if (res.code === 0 && res.challenges) {
+        const historyList = res.challenges
+          .filter(c => c.status === 'completed' && c.result)
+          .map(c => {
+            let result = {}
+            try { result = typeof c.result === 'string' ? JSON.parse(c.result) : (c.result || {}) } catch (e) {}
+            const score = result.score || 0
+            let scoreColor = '#9ca3af'
+            if (score >= 80) scoreColor = '#10b981'
+            else if (score >= 60) scoreColor = '#ec4899'
+            return {
+              id: c.id,
+              from_nickname: c.from_nickname,
+              to_nickname: c.to_nickname,
+              score,
+              scoreColor,
+              date: (c.updated_at || '').replace('T', ' ').substring(0, 19)
+            }
+          })
+        this.setData({ historyList })
+      }
+    } catch (e) {}
   },
 
   // ===== 模式选择 =====

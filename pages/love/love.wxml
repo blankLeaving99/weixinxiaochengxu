@@ -22,6 +22,18 @@
       </view>
       <text class="mode-arrow">›</text>
     </view>
+
+    <!-- 历史挑战记录 -->
+    <view wx:if="{{historyList.length > 0}}" class="card">
+      <text class="section-title">📋 历史挑战记录</text>
+      <view wx:for="{{historyList}}" wx:key="id" class="history-item">
+        <view class="history-top">
+          <text class="history-names">{{item.from_nickname}} ❤ {{item.to_nickname}}</text>
+          <text class="history-score" style="color: {{item.scoreColor}}">{{item.score}}%</text>
+        </view>
+        <text class="history-date">{{item.date}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 选择好友（远程模式） -->
