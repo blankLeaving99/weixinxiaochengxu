@@ -136,23 +136,61 @@ Page({
         })
       }
 
-      // 同步积分
+      // 同步积分（取本地和服务器中较高的值，避免覆盖）
       const ptsRes = await api.getPoints()
       if (ptsRes.code === 0) {
         const data = storage.load()
-        data._points = {
-          xp: ptsRes.points.xp,
-          level: ptsRes.points.level,
-          totalEarned: ptsRes.points.total_earned,
-          history: []
+        const localPts = data._points || { xp: 0, level: 1, totalEarned: 0 }
+        const serverXp = ptsRes.points.xp || 0
+        // 只有服务器数据比本地多时才覆盖
+        if (serverXp > localPts.xp) {
+          data._points = {
+            xp: ptsRes.points.xp,
+            level: ptsRes.points.level,
+            totalEarned: ptsRes.points.total_earned,
+            history: localPts.history || []
+          }
+          storage.save(data)
         }
-        storage.save(data)
       }
 
       // 刷新页面数据（直接 setData，不调用 onShow 避免递归）
       this._refreshPageData()
     } catch (e) {
       console.log('从后端同步数据失败:', e)
+    }
+  },
+
+  // 将本地数据同步到服务器（恢复备份后调用）
+  async syncToServer(data) {
+    try {
+      // 同步测试结果
+      const results = {}
+      Object.keys(data).forEach(k => {
+        if (!k.startsWith('_')) results[k] = data[k]
+      })
+      for (const [key, result] of Object.entries(results)) {
+        await api.saveTestResult(key, result).catch(() => {})
+      }
+
+      // 同步积分
+      const pts = data._points
+      if (pts && pts.xp > 0) {
+        await api.addPoints(pts.xp, 'backup_restore').catch(() => {})
+      }
+
+      // 同步成就
+      const achs = data._achievements || {}
+      for (const aid of Object.keys(achs)) {
+        await api.unlockAchievement(aid).catch(() => {})
+      }
+
+      // 同步设置
+      if (data._settings) {
+        await api.saveSettings(data._settings).catch(() => {})
+      }
+    } catch (e) {
+      console.log('同步到服务器失败:', e)
     }
   },
 
@@ -238,7 +276,12 @@ Page({
     wx.showToast({ title: '✓ 已保存', icon: 'success' })
   },
 
-  backup() {
+  async backup() {
+    // 备份前先从服务器同步最新数据
+    wx.showLoading({ title: '同步中...' })
+    await this.syncFromServer()
+    wx.hideLoading()
+
     const data = storage.fullBackup()
     const text = JSON.stringify(data)
     wx.setClipboardData({
@@ -273,10 +316,14 @@ Page({
           title: '确认恢复',
           content: '恢复备份将覆盖当前所有数据，确定继续吗？',
           confirmColor: '#ef4444',
-          success: (m) => {
+          success: async (m) => {
             if (m.confirm) {
               storage.fullRestore(data)
               wx.showToast({ title: '✓ 已恢复', icon: 'success' })
+
+              // 恢复后同步数据到服务器
+              await this.syncToServer(data)
+
               this.onShow()
             }
           }

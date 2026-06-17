@@ -39,7 +39,7 @@
 .input-field {
   border: 2rpx solid #e5e7eb;
   border-radius: 12rpx;
-  padding: 20rpx 24rpx;
+  padding: 0 24rpx;
   font-size: 30rpx;
   width: 100%;
   box-sizing: border-box;
@@ -47,8 +47,6 @@
   background: #fafafa;
   height: 88rpx;
   line-height: 88rpx;
-  display: flex;
-  align-items: center;
 }
 
 /* 交接提示 */
