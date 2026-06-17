@@ -177,7 +177,10 @@ Page({
       } else {
         this.setData({ pendingChallenges: [], hasPending: false })
       }
-    } catch (e) {}
+    } catch (e) {
+      // 网络错误时清除通知，避免卡住
+      this.setData({ pendingChallenges: [], hasPending: false })
+    }
   },
 
   // 点击挑战通知，跳转到对应测试
@@ -187,15 +190,26 @@ Page({
     const challengeId = challenge.id
     const friendName = challenge.from_nickname
 
-    if (testKey === 'love') {
+    const testMap = {
+      'love': '/pages/love/love',
+      'zodiac': '/pages/zodiac/zodiac'
+    }
+    const page = testMap[testKey]
+    if (page) {
       wx.navigateTo({
-        url: `/pages/love/love?challengeId=${challengeId}&friendName=${encodeURIComponent(friendName)}`
-      })
-    } else if (testKey === 'zodiac') {
-      wx.navigateTo({
-        url: `/pages/zodiac/zodiac?challengeId=${challengeId}&friendName=${encodeURIComponent(friendName)}`
+        url: `${page}?challengeId=${challengeId}&friendName=${encodeURIComponent(friendName)}`
       })
     }
+  },
+
+  // 忽略挑战（从通知中移除）
+  dismissChallenge(e) {
+    const challengeId = e.currentTarget.dataset.id
+    const pending = this.data.pendingChallenges.filter(c => c.id !== challengeId)
+    this.setData({
+      pendingChallenges: pending,
+      hasPending: pending.length > 0
+    })
   },
 
   getSummary(key, v) {

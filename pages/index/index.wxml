@@ -17,11 +17,12 @@
       wx:for="{{pendingChallenges}}"
       wx:key="id"
       class="notice-item"
-      data-item="{{item}}"
-      bindtap="onChallengeTap"
     >
-      <text class="notice-text">{{item.from_nickname}} 向你发起{{item.test_key === 'love' ? '恋爱默契' : '星座配对'}}挑战</text>
-      <text class="notice-btn">去答题 ›</text>
+      <view class="notice-content" data-item="{{item}}" bindtap="onChallengeTap">
+        <text class="notice-text">{{item.from_nickname}} 向你发起{{item.test_key === 'love' ? '恋爱默契' : '星座配对'}}挑战</text>
+        <text class="notice-btn">去答题 ›</text>
+      </view>
+      <view class="notice-dismiss" data-id="{{item.id}}" catchtap="dismissChallenge">✕</view>
     </view>
   </view>
 
