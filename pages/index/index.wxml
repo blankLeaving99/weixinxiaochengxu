@@ -118,8 +118,4 @@
     </view>
   </view>
 
-  <view class="footer-row">
-    <text class="footer-hint">💾 数据仅存储在本地设备</text>
-    <text class="footer-danger" bindtap="clearData">清除测试结果</text>
-  </view>
 </view>
