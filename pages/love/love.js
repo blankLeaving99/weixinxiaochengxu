@@ -82,8 +82,34 @@ Page({
             }
           })
         this.setData({ historyList })
+        // 缓存到本地
+        const data = storage.load()
+        data._challenges = res.challenges
+        storage.save(data)
       }
-    } catch (e) {}
+    } catch (e) {
+      // 网络失败时从本地缓存读取
+      const cached = (storage.load() || {})._challenges || []
+      const historyList = cached
+        .filter(c => c.status === 'completed' && c.result)
+        .map(c => {
+          let result = {}
+          try { result = typeof c.result === 'string' ? JSON.parse(c.result) : (c.result || {}) } catch (e) {}
+          const score = result.score || 0
+          let scoreColor = '#9ca3af'
+          if (score >= 80) scoreColor = '#10b981'
+          else if (score >= 60) scoreColor = '#ec4899'
+          return {
+            id: c.id,
+            from_nickname: c.from_nickname || '未知',
+            to_nickname: c.to_nickname || '未知',
+            score,
+            scoreColor,
+            date: (c.updated_at || '').replace('T', ' ').substring(0, 19)
+          }
+        })
+      this.setData({ historyList })
+    }
   },
 
   // ===== 模式选择 =====

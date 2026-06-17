@@ -384,6 +384,12 @@ Page({
             data._daily = dailyRes.state || { streak: 0, last_date: '', history: [] }
           }
 
+          // 拉取挑战历史（存入本地缓存，方便离线查看）
+          const challengeRes = await api.getChallenges()
+          if (challengeRes.code === 0) {
+            data._challenges = challengeRes.challenges || []
+          }
+
           // 恢复到本地
           storage.fullRestore(data)
           wx.hideLoading()
