@@ -10,7 +10,7 @@ router.post('/search', auth, async (req, res) => {
 
   try {
     const [users] = await pool.query(
-      'SELECT id, openid, nickname, avatar FROM users WHERE nickname LIKE ? AND id != ? LIMIT 50',
+      'SELECT id, openid, nickname, avatar FROM users WHERE nickname LIKE ? AND id != ? AND discoverable = 1 LIMIT 50',
       [`%${keyword}%`, req.user.id]
     )
     res.json({ code: 0, users })

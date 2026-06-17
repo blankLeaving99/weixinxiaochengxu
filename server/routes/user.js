@@ -103,4 +103,15 @@ router.put('/user/nickname', auth, async (req, res) => {
   }
 })
 
+// 更新"允许被搜索"设置
+router.put('/user/discoverable', auth, async (req, res) => {
+  const { discoverable } = req.body
+  try {
+    await pool.query('UPDATE users SET discoverable = ? WHERE id = ?', [discoverable ? 1 : 0, req.user.id])
+    res.json({ code: 0, message: '设置已更新' })
+  } catch (err) {
+    res.json({ code: -1, error: err.message })
+  }
+})
+
 module.exports = router

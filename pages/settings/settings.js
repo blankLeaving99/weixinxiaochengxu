@@ -26,7 +26,8 @@ Page({
     totalXp: 0,
     themes: THEMES,
     currentTheme: 'purple',
-    currentColor: '#7c3aed'
+    currentColor: '#7c3aed',
+    discoverable: true
   },
 
   onLoad() {
@@ -76,6 +77,30 @@ Page({
 
     // 异步从后端同步数据
     this.syncFromServer()
+
+    // 获取可被搜索设置
+    this.loadDiscoverable()
+  },
+
+  async loadDiscoverable() {
+    try {
+      const res = await api.getUserInfo()
+      if (res.code === 0 && res.user) {
+        this.setData({ discoverable: res.user.discoverable !== 0 })
+      }
+    } catch (e) {}
+  },
+
+  async toggleDiscoverable() {
+    const newVal = !this.data.discoverable
+    this.setData({ discoverable: newVal })
+    try {
+      await api.updateDiscoverable(newVal)
+      wx.showToast({ title: newVal ? '已允许被搜索' : '已关闭被搜索', icon: 'none' })
+    } catch (e) {
+      this.setData({ discoverable: !newVal })
+      wx.showToast({ title: '设置失败', icon: 'none' })
+    }
   },
 
   // 从后端同步数据到本地（直接写入存储，不触发回调避免回写循环）

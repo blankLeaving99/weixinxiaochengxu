@@ -180,6 +180,10 @@ async function updateNickname(nickname) {
   return request('PUT', '/user/nickname', { nickname })
 }
 
+async function updateDiscoverable(discoverable) {
+  return request('PUT', '/user/discoverable', { discoverable })
+}
+
 // ===== 测试结果 =====
 
 async function getTestResults() {
@@ -294,6 +298,7 @@ module.exports = {
   // 用户
   getUserInfo,
   updateNickname,
+  updateDiscoverable,
   // 测试结果
   getTestResults,
   getTestResult,
