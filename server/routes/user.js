@@ -93,7 +93,8 @@ router.get('/user/info', auth, (req, res) => {
 // 更新昵称
 router.put('/user/nickname', auth, async (req, res) => {
   const { nickname } = req.body
-  if (!nickname) return res.json({ code: -1, error: '昵称不能为空' })
+  if (!nickname || nickname.trim().length === 0) return res.json({ code: -1, error: '昵称不能为空' })
+  if (nickname.length > 20) return res.json({ code: -1, error: '昵称不能超过20个字符' })
 
   try {
     await pool.query('UPDATE users SET nickname = ? WHERE id = ?', [nickname, req.user.id])

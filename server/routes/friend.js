@@ -36,7 +36,7 @@ router.post('/search', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
   try {
     const [rows] = await pool.query(`
-      SELECT f.friend_id, f.note, f.created_at, u.openid, u.nickname, u.avatar
+      SELECT f.friend_id, f.note, f.created_at, u.nickname, u.avatar
       FROM friendships f
       JOIN users u ON f.friend_id = u.id
       WHERE f.user_id = ?

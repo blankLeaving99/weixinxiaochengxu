@@ -20,7 +20,9 @@ router.get('/', auth, async (req, res) => {
 // 增加积分
 router.post('/add', auth, async (req, res) => {
   const { amount, reason } = req.body
-  if (!amount) return res.json({ code: -1, error: '积分数不能为空' })
+  if (!amount || typeof amount !== 'number' || amount <= 0 || amount > 100 || !Number.isInteger(amount)) {
+    return res.json({ code: -1, error: '积分数必须是1-100的正整数' })
+  }
 
   try {
     // 确保积分记录存在

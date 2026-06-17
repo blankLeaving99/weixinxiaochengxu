@@ -118,7 +118,8 @@ router.post('/:id/accept', auth, async (req, res) => {
 // 提交答案
 router.post('/:id/answer', auth, async (req, res) => {
   const { answers } = req.body
-  if (!answers) return res.json({ code: -1, error: '答案不能为空' })
+  if (!answers || !Array.isArray(answers)) return res.json({ code: -1, error: '答案必须是数组' })
+  if (answers.length === 0 || answers.length > 20) return res.json({ code: -1, error: '答案数量异常' })
 
   try {
     const [rows] = await pool.query(
@@ -159,7 +160,6 @@ router.post('/:id/answer', auth, async (req, res) => {
       let result = {}
 
       if (testKey === 'love') {
-        const matchCount = fromAns.reduce((cnt, ans, i) => cnt + (ans === toAns[i] ? 0 : 0), 0)
         // 答案是选项索引数组
         const matches = fromAns.reduce((cnt, ans, i) => cnt + (ans === toAns[i] ? 1 : 0), 0)
         const score = Math.round(matches / fromAns.length * 100)
