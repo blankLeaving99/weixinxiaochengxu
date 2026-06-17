@@ -8,7 +8,7 @@ router.post('/create', auth, async (req, res) => {
   const { friendId, testKey } = req.body
   if (!friendId) return res.json({ code: -1, error: '好友ID不能为空' })
   if (!testKey) return res.json({ code: -1, error: '测试类型不能为空' })
-  if (friendId === req.user.id) return res.json({ code: -1, error: '不能挑战自己' })
+  if (friendId == req.user.id) return res.json({ code: -1, error: '不能挑战自己' })
 
   try {
     // 验证是否是好友
@@ -129,8 +129,8 @@ router.post('/:id/answer', auth, async (req, res) => {
     if (rows.length === 0) return res.json({ code: -1, error: '挑战不存在或已完成' })
 
     const challenge = rows[0]
-    const isFrom = challenge.from_user_id === req.user.id
-    const isTo = challenge.to_user_id === req.user.id
+    const isFrom = challenge.from_user_id == req.user.id
+    const isTo = challenge.to_user_id == req.user.id
 
     if (!isFrom && !isTo) return res.json({ code: -1, error: '你不是挑战参与者' })
 
@@ -148,11 +148,13 @@ router.post('/:id/answer', auth, async (req, res) => {
       )
     }
 
-    // 检查双方是否都提交了答案
+    // 检查双方是否都提交了答案（从数据库读取最新状态）
     const [updated] = await pool.query('SELECT * FROM challenges WHERE id = ?', [challenge.id])
     const c = updated[0]
-    const fromAns = isFrom ? answers : (c.from_answers ? JSON.parse(c.from_answers) : null)
-    const toAns = isTo ? answers : (c.to_answers ? JSON.parse(c.to_answers) : null)
+    let fromAns = null
+    let toAns = null
+    try { fromAns = c.from_answers ? JSON.parse(c.from_answers) : null } catch (e) {}
+    try { toAns = c.to_answers ? JSON.parse(c.to_answers) : null } catch (e) {}
 
     if (fromAns && toAns) {
       // 双方都提交了，计算结果
