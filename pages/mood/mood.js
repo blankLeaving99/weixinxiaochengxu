@@ -163,7 +163,9 @@ Page({
   calcStats() {
     const moodState = storage.getMoodState()
     const history = moodState.history || []
-    const totalDays = history.length
+    // 去重：同一天只算一次
+    const uniqueDays = new Set(history.map(h => h.date || (h.created_at || '').split('T')[0]).filter(Boolean))
+    const totalDays = uniqueDays.size
 
     if (totalDays === 0) {
       this.setData({ stats: { avgMood: 0, happyDays: 0, totalDays: 0, topTags: [] } })

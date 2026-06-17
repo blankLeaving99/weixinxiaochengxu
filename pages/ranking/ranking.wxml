@@ -1,17 +1,36 @@
 <view class="page-wrap">
-  <view class="header">
-    <text class="header-title">🏆 与我最契合的朋友们</text>
-    <text class="header-sub">共 {{total}} 位好友</text>
+  <view class="header" style="background: {{themeColor}}">
+    <text class="header-title">🏆 好友匹配排行榜</text>
+    <text class="header-sub">共 {{total}} 位好友参与</text>
+  </view>
+
+  <!-- 参与排行榜开关 -->
+  <view class="card join-card">
+    <view class="join-row">
+      <view class="join-left">
+        <text class="join-icon">📊</text>
+        <view class="join-text">
+          <text class="join-title">参与排行榜</text>
+          <text class="join-desc">开启后其他好友可以在排行榜看到你</text>
+        </view>
+      </view>
+      <switch checked="{{joinRanking}}" color="{{themeColor}}" bindchange="toggleRanking" />
+    </view>
   </view>
 
   <view wx:if="{{isEmpty}}" class="empty">
-    <text>还没有好友数据，请先到「好友管理」添加</text>
+    <text class="empty-emoji">🏆</text>
+    <text class="empty-text">暂无排行数据</text>
+    <text class="empty-hint">添加好友并完成测试后即可查看匹配度排行</text>
+    <button class="btn" style="background: {{themeColor}}" bindtap="goFriends">去添加好友</button>
   </view>
 
-  <view class="row" wx:for="{{list}}" wx:key="name">
-    <text class="medal">{{item.medal}}</text>
-    <text class="name">{{item.name}}</text>
-    <text wx:if="{{item.hasScore}}" class="score" style="color: {{item.scoreColor}}">{{item.score}} 分</text>
-    <text wx:else class="muted">数据不足</text>
+  <view wx:else class="ranking-list">
+    <view class="rank-row" wx:for="{{list}}" wx:key="name">
+      <text class="rank-medal">{{item.medal}}</text>
+      <text class="rank-name">{{item.name}}</text>
+      <text wx:if="{{item.hasScore}}" class="rank-score" style="color: {{item.scoreColor}}">{{item.score}} 分</text>
+      <text wx:else class="rank-muted">数据不足</text>
+    </view>
   </view>
 </view>
