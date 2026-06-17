@@ -132,6 +132,8 @@ router.post('/:id/answer', auth, async (req, res) => {
     const isFrom = challenge.from_user_id == req.user.id
     const isTo = challenge.to_user_id == req.user.id
 
+    console.log(`[Challenge ${challenge.id}] userId=${req.user.id}, isFrom=${isFrom}, isTo=${isTo}, answersLen=${answers.length}`)
+
     if (!isFrom && !isTo) return res.json({ code: -1, error: '你不是挑战参与者' })
 
     const answersJson = JSON.stringify(answers)
@@ -155,6 +157,8 @@ router.post('/:id/answer', auth, async (req, res) => {
     let toAns = null
     try { fromAns = c.from_answers ? JSON.parse(c.from_answers) : null } catch (e) {}
     try { toAns = c.to_answers ? JSON.parse(c.to_answers) : null } catch (e) {}
+
+    console.log(`[Challenge ${c.id}] fromAns=${!!fromAns}, toAns=${!!toAns}, status=${c.status}`)
 
     if (fromAns && toAns) {
       // 双方都提交了，计算结果
@@ -180,6 +184,7 @@ router.post('/:id/answer', auth, async (req, res) => {
         result = { score, match: matches, total: fromAns.length }
       }
 
+      console.log(`[Challenge ${c.id}] Completing! score=${result.score}`)
       await pool.query(
         'UPDATE challenges SET status = ?, result = ? WHERE id = ?',
         ['completed', JSON.stringify(result), challenge.id]
