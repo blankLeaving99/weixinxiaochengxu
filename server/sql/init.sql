@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   openid VARCHAR(64) UNIQUE NOT NULL COMMENT '微信openid',
   nickname VARCHAR(50) DEFAULT '微信用户' COMMENT '昵称',
   avatar VARCHAR(255) DEFAULT '' COMMENT '头像URL',
+  discoverable TINYINT(1) DEFAULT 1 COMMENT '允许被搜索: 1=允许 0=不允许',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   last_login_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -93,4 +94,20 @@ CREATE TABLE IF NOT EXISTS user_settings (
   user_id INT NOT NULL UNIQUE,
   settings_json TEXT NOT NULL COMMENT '设置JSON: 主题/字体/AI配置等',
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 挑战表（远程双人测试）
+CREATE TABLE IF NOT EXISTS challenges (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  from_user_id INT NOT NULL COMMENT '发起者',
+  to_user_id INT NOT NULL COMMENT '接收者',
+  test_key VARCHAR(30) NOT NULL DEFAULT 'love' COMMENT '测试类型: love/zodiac等',
+  status ENUM('pending','accepted','completed','expired') DEFAULT 'pending',
+  from_answers JSON COMMENT '发起者答案',
+  to_answers JSON COMMENT '接收者答案',
+  result JSON COMMENT '对比结果',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (from_user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (to_user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
