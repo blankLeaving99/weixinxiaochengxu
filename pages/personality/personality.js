@@ -57,6 +57,18 @@ Page({
     themeColor: '#7c3aed'
   },
 
+  onLoad() {
+    this._themeCb = (color) => {
+      this.setData({ themeColor: color })
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: color, animation: { duration: 300, timingFunc: 'easeIn' } })
+    }
+    app.registerThemeCallback(this._themeCb)
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
+  },
+
   onShow() {
     const themeColor = app.getThemeColor()
     wx.setNavigationBarColor({

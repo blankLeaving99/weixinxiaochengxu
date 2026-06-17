@@ -39,11 +39,12 @@
     <!-- 音乐推荐 -->
     <view class="card">
       <text class="card-title">🎵 音乐推荐</text>
-      <text class="card-desc">适合你人格类型的音乐</text>
+      <text class="card-desc">适合你人格类型的音乐 · 点击可复制搜索</text>
       <view class="rec-list">
-        <view class="rec-item" wx:for="{{musicRecs}}" wx:key="*this">
+        <view class="rec-item rec-item-clickable" wx:for="{{musicRecs}}" wx:key="*this" bindtap="searchMusic" data-text="{{item}}">
           <text class="rec-num">{{index + 1}}</text>
           <text class="rec-text">{{item}}</text>
+          <text class="rec-action">🔍</text>
         </view>
       </view>
     </view>
@@ -51,11 +52,12 @@
     <!-- 电影推荐 -->
     <view class="card">
       <text class="card-title">🎬 电影推荐</text>
-      <text class="card-desc">你会喜欢的电影</text>
+      <text class="card-desc">你会喜欢的电影 · 点击可复制搜索</text>
       <view class="rec-list">
-        <view class="rec-item" wx:for="{{movieRecs}}" wx:key="*this">
+        <view class="rec-item rec-item-clickable" wx:for="{{movieRecs}}" wx:key="*this" bindtap="searchMovie" data-text="{{item}}">
           <text class="rec-num">{{index + 1}}</text>
           <text class="rec-text">{{item}}</text>
+          <text class="rec-action">🔍</text>
         </view>
       </view>
     </view>
@@ -63,11 +65,12 @@
     <!-- 书籍推荐 -->
     <view class="card">
       <text class="card-title">📚 书籍推荐</text>
-      <text class="card-desc">提升自我的好书</text>
+      <text class="card-desc">提升自我的好书 · 点击可复制书名</text>
       <view class="rec-list">
-        <view class="rec-item" wx:for="{{bookRecs}}" wx:key="*this">
+        <view class="rec-item rec-item-clickable" wx:for="{{bookRecs}}" wx:key="*this" bindtap="copyRec" data-text="{{item}}">
           <text class="rec-num">{{index + 1}}</text>
           <text class="rec-text">{{item}}</text>
+          <text class="rec-action">📋</text>
         </view>
       </view>
     </view>

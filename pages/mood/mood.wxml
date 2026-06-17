@@ -1,3 +1,13 @@
+<wxs module="util">
+function includes(arr, item) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] === item) return true;
+  }
+  return false;
+}
+module.exports = { includes: includes }
+</wxs>
+
 <view class="page-wrap">
 
   <!-- 今日心情记录 -->
@@ -15,7 +25,7 @@
     <view class="tags-section">
       <text class="section-label" style="color: {{themeColor}}">选择标签（最多5个）</text>
       <view class="tags-wrap">
-        <view class="tag-item {{selectedTags.includes(item) ? 'selected' : ''}}" wx:for="{{moodTags}}" wx:key="*this" bindtap="toggleTag" data-tag="{{item}}">
+        <view class="tag-item {{util.includes(selectedTags, item) ? 'selected' : ''}}" wx:for="{{moodTags}}" wx:key="*this" bindtap="toggleTag" data-tag="{{item}}">
           <text class="tag-text">{{item}}</text>
         </view>
       </view>
@@ -33,8 +43,8 @@
   <view wx:if="{{todayRecord}}" class="card today-card">
     <text class="card-title">✅ 今日已记录</text>
     <view class="today-mood">
-      <text class="today-emoji">{{moods[todayRecord.mood - 1].emoji}}</text>
-      <text class="today-label">{{moods[todayRecord.mood - 1].label}}</text>
+      <text class="today-emoji">{{moodMap[todayRecord.mood].emoji}}</text>
+      <text class="today-label">{{moodMap[todayRecord.mood].label}}</text>
     </view>
     <view wx:if="{{todayRecord.tags.length > 0}}" class="today-tags">
       <text class="tag-item" wx:for="{{todayRecord.tags}}" wx:key="*this">{{item}}</text>
@@ -128,7 +138,7 @@
             <text class="history-tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
           </view>
         </view>
-        <text class="history-mood">{{moods[item.mood - 1].emoji}}</text>
+        <text class="history-mood">{{moodMap[item.mood].emoji}}</text>
       </view>
       <view wx:if="{{history.length === 0}}" class="empty-history">
         <text class="empty-text">暂无记录</text>

@@ -1,0 +1,48 @@
+<view class="login-page">
+  <!-- 顶部装饰 -->
+  <view class="header">
+    <view class="logo-circle">
+      <text class="logo-emoji">🧠</text>
+    </view>
+    <text class="app-title">性格测试套件</text>
+    <text class="app-subtitle">发现更真实的自己</text>
+  </view>
+
+  <!-- 功能介绍 -->
+  <view class="features">
+    <view class="feature-item">
+      <text class="feature-icon">🔬</text>
+      <text class="feature-text">MBTI · 星座 · 情商 等10+测试</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">👥</text>
+      <text class="feature-text">好友对比 · 排行榜</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">🏆</text>
+      <text class="feature-text">成就系统 · 积分等级</text>
+    </view>
+  </view>
+
+  <!-- 登录区域 -->
+  <view class="login-area">
+    <!-- 静默登录中 -->
+    <view wx:if="{{!tried}}" class="loading-area">
+      <text class="loading-text">正在登录...</text>
+    </view>
+
+    <!-- 登录按钮 -->
+    <block wx:else>
+      <button class="login-btn" bindtap="onLogin" loading="{{logging}}" disabled="{{logging}}">
+        <text wx:if="{{!logging}}">微信一键登录</text>
+        <text wx:else>登录中...</text>
+      </button>
+      <text class="login-hint">登录后数据将云端同步，多设备共享</text>
+    </block>
+  </view>
+
+  <!-- 底部 -->
+  <view class="footer">
+    <text class="footer-text">登录即表示同意使用协议</text>
+  </view>
+</view>

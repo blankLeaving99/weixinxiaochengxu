@@ -1,0 +1,96 @@
+-- 性格测试套件 数据库初始化脚本
+-- 使用方法: mysql -u root -p < init.sql
+
+CREATE DATABASE IF NOT EXISTS personality_test DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE personality_test;
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  openid VARCHAR(64) UNIQUE NOT NULL COMMENT '微信openid',
+  nickname VARCHAR(50) DEFAULT '微信用户' COMMENT '昵称',
+  avatar VARCHAR(255) DEFAULT '' COMMENT '头像URL',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  last_login_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 测试结果表
+CREATE TABLE IF NOT EXISTS test_results (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  test_key VARCHAR(30) NOT NULL COMMENT '测试类型: mbti/love/zodiac/taste/eq/iq/color/fun_stress等',
+  result_json TEXT NOT NULL COMMENT '测试结果JSON',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY uk_user_test (user_id, test_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 好友关系表
+CREATE TABLE IF NOT EXISTS friendships (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  friend_id INT NOT NULL,
+  note VARCHAR(100) DEFAULT '' COMMENT '好友备注',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY uk_friendship (user_id, friend_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 成就表
+CREATE TABLE IF NOT EXISTS achievements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  achievement_id VARCHAR(30) NOT NULL COMMENT '成就ID: first_test/all_done/mbti_done等',
+  unlocked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY uk_user_ach (user_id, achievement_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 积分表
+CREATE TABLE IF NOT EXISTS points (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  xp INT DEFAULT 0 COMMENT '当前经验值',
+  level INT DEFAULT 1 COMMENT '当前等级',
+  total_earned INT DEFAULT 0 COMMENT '累计获得积分',
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 积分历史表
+CREATE TABLE IF NOT EXISTS point_history (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  amount INT NOT NULL,
+  reason VARCHAR(50),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 心情日记表
+CREATE TABLE IF NOT EXISTS mood_history (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  mood_data TEXT NOT NULL COMMENT 'JSON格式的心情数据',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 每日一题状态表
+CREATE TABLE IF NOT EXISTS daily_state (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  streak INT DEFAULT 0 COMMENT '连续打卡天数',
+  last_date VARCHAR(10) DEFAULT '' COMMENT '最后打卡日期 YYYY-MM-DD',
+  history_json TEXT DEFAULT '[]' COMMENT '历史记录JSON',
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 设置表
+CREATE TABLE IF NOT EXISTS user_settings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  settings_json TEXT NOT NULL DEFAULT '{}' COMMENT '设置JSON: 主题/字体/AI配置等',
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

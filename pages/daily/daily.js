@@ -1,4 +1,5 @@
 const storage = require('../../utils/storage')
+const api = require('../../utils/api')
 const { DAILY_QUESTIONS, ZODIACS } = require('../../utils/data')
 const helpers = require('../../utils/helpers')
 const app = getApp()
@@ -23,7 +24,6 @@ function getTodayQuestion() {
   return DAILY_QUESTIONS[seed % DAILY_QUESTIONS.length]
 }
 
-// 每日名言
 const DAILY_QUOTES = [
   { text: '认识你自己。', author: '苏格拉底' },
   { text: '人生最大的智慧是认识自己。', author: '老子' },
@@ -37,7 +37,6 @@ const DAILY_QUOTES = [
   { text: '未经审视的人生不值得过。', author: '苏格拉底' }
 ]
 
-// 每日挑战任务
 const DAILY_CHALLENGES = [
   { id: 'smile', title: '微笑挑战', desc: '对3个陌生人微笑', icon: '😊', points: 15 },
   { id: 'compliment', title: '赞美挑战', desc: '真诚地赞美一个人', icon: '💝', points: 15 },
@@ -59,7 +58,7 @@ function getTodayChallenge() {
 function getTodayQuote() {
   const ts = todayStr()
   let seed = 0
-  for (let i = 0; i < ts.length; i++) seed += ts.charCodeAt(i + 3)
+  for (let i = 0; i < ts.length; i++) seed += ts.charCodeAt(i)
   return DAILY_QUOTES[seed % DAILY_QUOTES.length]
 }
 
@@ -122,7 +121,19 @@ Page({
     themeColor: '#7c3aed'
   },
 
-  onShow() {
+  onLoad() {
+    this._themeCb = (color) => {
+      this.setData({ themeColor: color })
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: color, animation: { duration: 300, timingFunc: 'easeIn' } })
+    }
+    app.registerThemeCallback(this._themeCb)
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
+  },
+
+  async onShow() {
     const themeColor = app.getThemeColor()
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
@@ -130,8 +141,20 @@ Page({
       animation: { duration: 0, timingFunc: 'easeIn' }
     })
 
-    // 一次性读取所有数据
-    const state = storage.getDailyState()
+    // 从后端同步每日一题状态
+    let serverState = null
+    try {
+      const res = await api.getDailyState()
+      if (res.code === 0) {
+        serverState = res.state
+        // 直接写入本地存储，不触发回调避免回写循环
+        const data = storage.load()
+        data._daily = serverState
+        storage.save(data)
+      }
+    } catch (e) {}
+
+    const state = serverState || storage.getDailyState()
     const pts = storage.getPoints()
     const levelInfo = storage.getLevelInfo(pts.level)
     const today = todayStr()
@@ -144,7 +167,6 @@ Page({
     }
     const challengeDone = state.challengeDone === today
 
-    // 只调用一次 setData
     this.setData({
       themeColor,
       streak: state.streak || 0,
@@ -173,11 +195,9 @@ Page({
     const firstDay = new Date(year, month, 1).getDay()
 
     const days = []
-    // 填充前面的空格
     for (let i = 0; i < firstDay; i++) {
       days.push({ day: '', checked: false, isToday: false })
     }
-    // 填充日期
     const todayStr2 = todayStr()
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
@@ -196,7 +216,7 @@ Page({
     this.setData({ input: e.detail.value })
   },
 
-  checkin() {
+  async checkin() {
     const ans = (this.data.input || '').trim()
     if (!ans) {
       wx.showToast({ title: '请先写下你的答案', icon: 'none' })
@@ -209,7 +229,7 @@ Page({
     if (last) {
       const delta = dayDelta(last, today)
       if (delta === 1) state.streak = (state.streak || 0) + 1
-      else if (delta === 0) {} // already done
+      else if (delta === 0) {}
       else state.streak = 1
     } else {
       state.streak = 1
@@ -220,18 +240,17 @@ Page({
     state.history = hist.slice(-365)
     storage.setDailyState(state)
 
+    // 同步到后端
+    try {
+      await api.updateDailyState(state)
+    } catch (e) {}
+
     // 奖励积分
     helpers.awardPoints('daily_checkin')
 
-    // 连续打卡额外奖励
-    if (state.streak === 3) {
-      helpers.awardPoints('streak_3')
-    }
-    if (state.streak === 7) {
-      helpers.awardPoints('streak_7')
-    }
+    if (state.streak === 3) helpers.awardPoints('streak_3')
+    if (state.streak === 7) helpers.awardPoints('streak_7')
 
-    // 解锁连续打卡成就
     const unlocked = []
     if (state.streak >= 3 && storage.unlockAchievement('daily_3')) {
       unlocked.push({ icon: '📅', title: '三日打卡', desc: '每日一题连续 3 天' })
@@ -263,7 +282,6 @@ Page({
     state.challengeDone = today
     storage.setDailyState(state)
 
-    // 奖励积分
     helpers.awardPoints('daily_checkin')
 
     wx.showToast({ title: `🎉 挑战完成 +${this.data.challenge.points}XP`, icon: 'success' })

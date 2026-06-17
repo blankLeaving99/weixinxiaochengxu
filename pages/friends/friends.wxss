@@ -197,3 +197,102 @@
   background: #fef2f2;
   color: #ef4444;
 }
+
+/* 添加好友按钮组 */
+.add-btn-group {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.add-btn-group .btn {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* 搜索面板 */
+.search-panel {
+  background: #f3f4f6;
+  border-radius: 14rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.panel-title {
+  font-size: 26rpx;
+  color: #374151;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.search-row {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.search-input {
+  flex: 1;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 10rpx;
+  padding: 14rpx 18rpx;
+  font-size: 26rpx;
+  background: #fff;
+}
+
+.search-btn {
+  color: #fff;
+  font-size: 26rpx;
+  padding: 14rpx 28rpx;
+  border-radius: 10rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.search-loading {
+  text-align: center;
+  padding: 16rpx;
+  color: #9ca3af;
+  font-size: 26rpx;
+}
+
+.search-results {
+  margin-top: 8rpx;
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 10rpx;
+  padding: 16rpx;
+  margin-bottom: 8rpx;
+}
+
+.search-info {
+  flex: 1;
+}
+
+.search-name {
+  font-size: 28rpx;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.add-btn {
+  background: #10b981;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 10rpx 24rpx;
+  border-radius: 8rpx;
+  font-weight: 600;
+}
+
+.search-empty {
+  text-align: center;
+  padding: 16rpx;
+  color: #9ca3af;
+  font-size: 26rpx;
+}

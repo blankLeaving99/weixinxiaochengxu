@@ -1,4 +1,5 @@
 const storage = require('../../utils/storage')
+const api = require('../../utils/api')
 const helpers = require('../../utils/helpers')
 const app = getApp()
 
@@ -17,6 +18,9 @@ const MOODS = [
   { value: 1, emoji: '😢', label: '难过', color: '#ef4444' }
 ]
 
+const MOOD_MAP = {}
+MOODS.forEach(m => { MOOD_MAP[m.value] = m })
+
 const MOOD_TAGS = [
   '工作顺利', '学习进步', '运动健身', '美食享受',
   '朋友聚会', '家庭温馨', '恋爱甜蜜', '独处放松',
@@ -28,6 +32,7 @@ const MOOD_TAGS = [
 Page({
   data: {
     moods: MOODS,
+    moodMap: MOOD_MAP,
     moodTags: MOOD_TAGS,
     selectedMood: 0,
     selectedTags: [],
@@ -45,6 +50,18 @@ Page({
       totalDays: 0,
       topTags: []
     }
+  },
+
+  onLoad() {
+    this._themeCb = (color) => {
+      this.setData({ themeColor: color })
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: color, animation: { duration: 300, timingFunc: 'easeIn' } })
+    }
+    app.registerThemeCallback(this._themeCb)
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
   },
 
   onShow() {
@@ -72,6 +89,25 @@ Page({
     this.loadWeekData()
     this.loadMonthData()
     this.calcStats()
+
+    // 从后端同步
+    this.syncFromServer()
+  },
+
+  async syncFromServer() {
+    try {
+      const res = await api.getMoodHistory()
+      if (res.code === 0 && res.history) {
+        // 直接写入本地存储，不触发回调避免回写循环
+        const data = storage.load()
+        data._mood = { history: res.history }
+        storage.save(data)
+        this.loadHistory()
+        this.loadWeekData()
+        this.loadMonthData()
+        this.calcStats()
+      }
+    } catch (e) {}
   },
 
   loadHistory() {
@@ -137,7 +173,6 @@ Page({
     const happyDays = history.filter(h => h.mood >= 4).length
     const avgMood = (history.reduce((sum, h) => sum + h.mood, 0) / totalDays).toFixed(1)
 
-    // 统计最常见标签
     const tagCount = {}
     history.forEach(h => {
       (h.tags || []).forEach(tag => {
@@ -175,18 +210,13 @@ Page({
     this.setData({ note: e.detail.value })
   },
 
-  saveMood() {
+  async saveMood() {
     if (this.data.selectedMood === 0) {
       wx.showToast({ title: '请选择今天的心情', icon: 'none' })
       return
     }
 
     const today = todayStr()
-    const moodState = storage.getMoodState()
-    const history = moodState.history || []
-
-    // 检查是否已记录
-    const existIdx = history.findIndex(h => h.date === today)
     const record = {
       date: today,
       mood: this.data.selectedMood,
@@ -194,14 +224,22 @@ Page({
       note: this.data.note
     }
 
+    // 保存到本地
+    const moodState = storage.getMoodState()
+    const history = moodState.history || []
+    const existIdx = history.findIndex(h => h.date === today)
     if (existIdx >= 0) {
       history[existIdx] = record
     } else {
       history.push(record)
     }
-
     moodState.history = history.slice(-365)
     storage.setMoodState(moodState)
+
+    // 同步到后端
+    try {
+      await api.addMood(record)
+    } catch (e) {}
 
     // 奖励积分
     helpers.awardPoints('daily_checkin')

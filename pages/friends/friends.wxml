@@ -1,5 +1,6 @@
 <view class="page-wrap">
 
+  <!-- 我的档案 -->
   <view class="card">
     <text class="section-title" style="color: {{themeColor}}">🪪 我的档案</text>
     <view class="row-input">
@@ -7,30 +8,63 @@
       <input class="input" placeholder="请输入" value="{{myName}}" bindinput="onNameInput" />
       <view class="mini-btn" bindtap="saveProfile">保存</view>
     </view>
-    <button class="btn btn-primary" bindtap="exportMine">📤 导出我的结果（复制到剪贴板）</button>
+    <button class="btn btn-secondary" bindtap="exportMine">📤 导出我的结果（复制到剪贴板）</button>
   </view>
 
+  <!-- 好友管理 -->
   <view class="card">
     <view class="head-row">
       <text class="section-title flex" style="color: {{themeColor}}">👥 我的好友（{{friendCount}}）</text>
       <view class="ghost-btn" bindtap="goRanking">🏆 排行榜</view>
     </view>
-    <button class="btn btn-secondary" bindtap="importFriend">📥 添加好友（从剪贴板粘贴）</button>
 
+    <!-- 添加好友按钮组 -->
+    <view class="add-btn-group">
+      <button class="btn btn-primary" bindtap="toggleAddPanel">🔍 搜索添加好友</button>
+      <button class="btn btn-secondary" bindtap="importFriend">📥 从剪贴板导入</button>
+    </view>
+
+    <!-- 云端搜索添加面板 -->
+    <view wx:if="{{showAddPanel}}" class="search-panel">
+      <text class="panel-title">搜索好友昵称</text>
+      <view class="search-row">
+        <input class="search-input" placeholder="输入昵称搜索..." value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="searchUsers" />
+        <view class="search-btn" bindtap="searchUsers" style="background: {{themeColor}}">搜索</view>
+      </view>
+
+      <view wx:if="{{isSearching}}" class="search-loading">
+        <text>搜索中...</text>
+      </view>
+
+      <view wx:if="{{searchResults.length > 0}}" class="search-results">
+        <view class="search-item" wx:for="{{searchResults}}" wx:key="id">
+          <view class="search-info">
+            <text class="search-name">{{item.nickname}}</text>
+          </view>
+          <view class="add-btn" data-id="{{item.id}}" data-nickname="{{item.nickname}}" bindtap="addFriendCloud">+ 添加</view>
+        </view>
+      </view>
+      <view wx:elif="{{searchKeyword && !isSearching}}" class="search-empty">
+        <text>未找到匹配的用户</text>
+      </view>
+    </view>
+
+    <!-- 搜索/筛选工具栏 -->
     <view class="toolbar" wx:if="{{!isEmpty}}">
-      <input class="search" placeholder="🔍 按昵称 / MBTI / 星座搜索" bindinput="onSearch" />
+      <input class="search" placeholder="🔍 按昵称 / 备注搜索" bindinput="onSearch" />
       <picker bindchange="onSortChange" value="{{sortMode}}" range="{{sortLabels}}">
         <view class="sort-btn">{{sortLabels[sortMode]}} ▾</view>
       </picker>
     </view>
 
     <view wx:if="{{isEmpty}}" class="hint-empty">
-      <text>还没有好友数据。让朋友点「导出我的结果」复制后发给你，再点「添加好友」即可导入。</text>
+      <text>还没有好友，点击「搜索添加好友」试试吧！</text>
     </view>
     <view wx:elif="{{isFiltered}}" class="hint-empty">
       <text>未找到匹配的好友</text>
     </view>
 
+    <!-- 好友列表 -->
     <view class="friend-row" wx:for="{{friendList}}" wx:key="name">
       <view class="friend-top">
         <text class="friend-name">👤 {{item.name}}</text>
@@ -38,9 +72,9 @@
       </view>
       <text class="friend-note" wx:if="{{item.note}}">📝 {{item.note}}</text>
       <view class="friend-actions">
-        <view class="action-btn primary" data-name="{{item.name}}" bindtap="compareFriend">🔍 对比</view>
-        <view class="action-btn ghost" data-name="{{item.name}}" bindtap="editNote">📝 备注</view>
-        <view class="action-btn danger" data-name="{{item.name}}" bindtap="removeFriend">🗑 删除</view>
+        <view class="action-btn primary" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="compareFriend">🔍 对比</view>
+        <view class="action-btn ghost" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="editNote">📝 备注</view>
+        <view class="action-btn danger" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="removeFriend">🗑 删除</view>
       </view>
     </view>
   </view>

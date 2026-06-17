@@ -7,6 +7,17 @@ const STORAGE_KEY = 'personality_suite_v1'
 // 内存缓存，避免重复读取 storage
 let _cache = null
 
+// 后端同步回调（在 app.js 中设置）
+let _onResultSet = null
+let _onMoodChange = null
+let _onDailyChange = null
+
+function setSyncCallbacks(callbacks) {
+  _onResultSet = callbacks.onResult || null
+  _onMoodChange = callbacks.onMood || null
+  _onDailyChange = callbacks.onDaily || null
+}
+
 function load() {
   if (_cache) return _cache
   try {
@@ -39,6 +50,10 @@ function setResult(key, result) {
   const data = load()
   data[key] = result
   save(data)
+  // 同步到后端（异步，不阻塞）
+  if (_onResultSet) {
+    try { _onResultSet(key, result) } catch (e) {}
+  }
 }
 
 /**
@@ -158,6 +173,9 @@ function setDailyState(state) {
   const data = load()
   data._daily = state
   save(data)
+  if (_onDailyChange) {
+    try { _onDailyChange(state) } catch (e) {}
+  }
 }
 
 // ===== 设置 =====
@@ -187,6 +205,9 @@ function setMoodState(state) {
   const data = load()
   data._mood = state
   save(data)
+  if (_onMoodChange) {
+    try { _onMoodChange(state) } catch (e) {}
+  }
 }
 
 // ===== 积分等级系统 =====
@@ -261,5 +282,6 @@ module.exports = {
   getMoodState, setMoodState,
   getSettings, updateSetting,
   getPoints, addPoints, getLevelInfo,
-  fullBackup, fullRestore
+  fullBackup, fullRestore,
+  setSyncCallbacks
 }

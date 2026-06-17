@@ -1,4 +1,5 @@
 const storage = require('../../utils/storage')
+const api = require('../../utils/api')
 const { checkFriendAdded, showUnlocked } = require('../../utils/helpers')
 const app = getApp()
 
@@ -21,7 +22,23 @@ Page({
     friendCount: 0,
     isEmpty: true,
     isFiltered: false,
-    themeColor: '#7c3aed'
+    themeColor: '#7c3aed',
+    showAddPanel: false,
+    searchKeyword: '',
+    searchResults: [],
+    isSearching: false
+  },
+
+  onLoad() {
+    this._themeCb = (color) => {
+      this.setData({ themeColor: color })
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: color, animation: { duration: 300, timingFunc: 'easeIn' } })
+    }
+    app.registerThemeCallback(this._themeCb)
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
   },
 
   onShow() {
@@ -30,7 +47,7 @@ Page({
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: themeColor,
-      animation: { duration: 300, timingFunc: 'easeIn' }
+      animation: { duration: 0, timingFunc: 'easeIn' }
     })
 
     const profile = storage.getProfile()
@@ -42,10 +59,16 @@ Page({
     this.setData({ myName: e.detail.value })
   },
 
-  saveProfile() {
+  async saveProfile() {
     const name = (this.data.myName || '').trim() || '我'
     storage.setProfile({ name })
     this.setData({ myName: name })
+
+    // 同步到后端
+    try {
+      await api.updateNickname(name)
+    } catch (e) {}
+
     wx.showToast({ title: '昵称已保存', icon: 'success' })
   },
 
@@ -59,40 +82,127 @@ Page({
     this.refreshList()
   },
 
-  refreshList() {
-    const friends = storage.getFriends()
-    const allCount = Object.keys(friends).length
-    let items = Object.keys(friends).map(name => {
-      const payload = friends[name]
-      const res = payload.results || {}
-      return {
-        name,
-        summary: summary(res),
-        note: payload._note || ''
-      }
-    })
+  async refreshList() {
+    try {
+      const res = await api.getFriends()
+      if (res.code === 0) {
+        const allCount = res.friends.length
+        let items = res.friends.map(f => ({
+          id: f.friend_id,
+          openid: f.openid || '',
+          name: f.nickname || '未知',
+          summary: '',
+          note: f.note || '',
+          avatar: f.avatar || ''
+        }))
 
-    const kw = (this.data.keyword || '').trim().toLowerCase()
-    if (kw) {
-      items = items.filter(it => {
-        const hay = (it.name + ' ' + it.summary).toLowerCase()
-        return hay.indexOf(kw) >= 0
+        const kw = (this.data.keyword || '').trim().toLowerCase()
+        if (kw) {
+          items = items.filter(it => {
+            const hay = (it.name + ' ' + it.summary + ' ' + it.note).toLowerCase()
+            return hay.indexOf(kw) >= 0
+          })
+        }
+
+        const mode = this.data.sortMode
+        if (mode === 1) items.sort((a, b) => a.name.localeCompare(b.name))
+        if (mode === 2) items.sort((a, b) => b.name.localeCompare(a.name))
+
+        this.setData({
+          friendList: items,
+          friendCount: allCount,
+          isEmpty: allCount === 0,
+          isFiltered: !!kw && items.length === 0
+        })
+      }
+    } catch (e) {
+      console.error('获取好友列表失败，回退到本地数据:', e)
+      // 服务器不可用时回退到本地存储
+      const friends = storage.getFriends()
+      const allCount = Object.keys(friends).length
+      let items = Object.keys(friends).map(name => {
+        const payload = friends[name]
+        const res = payload.results || {}
+        return {
+          name,
+          summary: summary(res),
+          note: payload._note || ''
+        }
+      })
+
+      const kw = (this.data.keyword || '').trim().toLowerCase()
+      if (kw) {
+        items = items.filter(it => {
+          const hay = (it.name + ' ' + it.summary + ' ' + it.note).toLowerCase()
+          return hay.indexOf(kw) >= 0
+        })
+      }
+
+      const mode = this.data.sortMode
+      if (mode === 1) items.sort((a, b) => a.name.localeCompare(b.name))
+      if (mode === 2) items.sort((a, b) => b.name.localeCompare(a.name))
+
+      this.setData({
+        friendList: items,
+        friendCount: allCount,
+        isEmpty: allCount === 0,
+        isFiltered: !!kw && items.length === 0
       })
     }
-
-    const mode = this.data.sortMode
-    if (mode === 1) items.sort((a, b) => a.name.localeCompare(b.name))
-    if (mode === 2) items.sort((a, b) => b.name.localeCompare(a.name))
-
-    this.setData({
-      friendList: items,
-      friendCount: allCount,
-      isEmpty: allCount === 0,
-      isFiltered: !!kw && items.length === 0
-    })
   },
 
-  // ========== 导出我的结果 ==========
+  // ========== 搜索添加好友 ==========
+  toggleAddPanel() {
+    this.setData({ showAddPanel: !this.data.showAddPanel, searchResults: [], searchKeyword: '' })
+  },
+
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value })
+  },
+
+  async searchUsers() {
+    const kw = (this.data.searchKeyword || '').trim()
+    if (!kw) {
+      wx.showToast({ title: '请输入昵称搜索', icon: 'none' })
+      return
+    }
+    this.setData({ isSearching: true })
+    try {
+      const res = await api.searchUsers(kw)
+      this.setData({ isSearching: false })
+      if (res.code === 0) {
+        this.setData({ searchResults: res.users || [] })
+      } else {
+        wx.showToast({ title: '搜索失败', icon: 'none' })
+      }
+    } catch (e) {
+      this.setData({ isSearching: false })
+      wx.showToast({ title: '搜索失败', icon: 'none' })
+    }
+  },
+
+  async addFriendCloud(e) {
+    const friendId = e.currentTarget.dataset.id
+    const nickname = e.currentTarget.dataset.nickname
+    try {
+      const res = await api.addFriend(friendId)
+      if (res.code === 0) {
+        wx.showToast({ title: `已添加：${nickname}`, icon: 'success' })
+        this.setData({ showAddPanel: false })
+        this.refreshList()
+
+        // 检查成就
+        const unlocked = checkFriendAdded()
+        if (unlocked.length) setTimeout(() => showUnlocked(unlocked), 800)
+      } else {
+        wx.showToast({ title: res.error || '添加失败', icon: 'none' })
+      }
+    } catch (e) {
+      wx.showToast({ title: '添加失败', icon: 'none' })
+    }
+  },
+
+  // ========== 本地导入好友（保留兼容） ==========
   exportMine() {
     const profile = storage.getProfile()
     if (!profile.name) {
@@ -119,7 +229,6 @@ Page({
     })
   },
 
-  // ========== 添加好友（粘贴）==========
   importFriend() {
     wx.getClipboardData({
       success: (res) => {
@@ -166,12 +275,17 @@ Page({
 
   removeFriend(e) {
     const name = e.currentTarget.dataset.name
+    const id = e.currentTarget.dataset.id
+
     wx.showModal({
       title: '确认',
       content: `确定删除好友「${name}」吗？`,
       confirmColor: '#ef4444',
-      success: (m) => {
+      success: async (m) => {
         if (m.confirm) {
+          if (id) {
+            try { await api.removeFriend(id) } catch (e) {}
+          }
           storage.removeFriend(name)
           this.refreshList()
         }
@@ -181,15 +295,21 @@ Page({
 
   editNote(e) {
     const name = e.currentTarget.dataset.name
+    const id = e.currentTarget.dataset.id
     const current = storage.getFriendNote(name)
+
     wx.showModal({
       title: `备注：${name}`,
       editable: true,
       placeholderText: '为这位好友写一段备注…',
       content: current,
-      success: (m) => {
+      success: async (m) => {
         if (m.confirm) {
-          storage.setFriendNote(name, (m.content || '').trim())
+          const note = (m.content || '').trim()
+          storage.setFriendNote(name, note)
+          if (id) {
+            try { await api.updateFriendNote(id, note) } catch (e) {}
+          }
           this.refreshList()
         }
       }
@@ -197,8 +317,15 @@ Page({
   },
 
   compareFriend(e) {
+    const id = e.currentTarget.dataset.id
     const name = e.currentTarget.dataset.name
-    wx.navigateTo({ url: `/pages/compare/compare?name=${encodeURIComponent(name)}` })
+    if (id) {
+      // 使用后端 API 获取好友结果进行比较
+      wx.navigateTo({ url: `/pages/compare/compare?friendId=${id}&name=${encodeURIComponent(name)}` })
+    } else {
+      // 本地好友
+      wx.navigateTo({ url: `/pages/compare/compare?name=${encodeURIComponent(name)}` })
+    }
   },
 
   goRanking() {

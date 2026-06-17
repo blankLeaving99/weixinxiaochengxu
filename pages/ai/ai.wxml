@@ -1,41 +1,12 @@
 <view class="page-wrap">
 
-  <!-- AI提供商选择 -->
-  <view class="card">
-    <text class="card-title">🤖 选择AI服务</text>
-
-    <view class="provider-select">
-      <text class="field-label">AI 提供商</text>
-      <picker bindchange="onProviderChange" value="{{providerIdx}}" range="{{providerNames}}">
-        <view class="picker-btn">
-          <view class="picker-left">
-            <text class="picker-text">{{providerNames[providerIdx]}}</text>
-            <text class="free-tag" wx:if="{{isFree}}">免费</text>
-          </view>
-          <text class="picker-arrow">▾</text>
-        </view>
-      </picker>
-      <text class="provider-hint">{{providerDesc}}</text>
+  <!-- 模式切换 -->
+  <view class="mode-toggle" wx:if="{{canRun}}">
+    <view class="mode-btn {{!isChatMode ? 'active' : ''}}" bindtap="switchMode" data-mode="analysis">
+      📊 一键分析
     </view>
-
-    <!-- 百度需要两个Key -->
-    <view class="api-key-section" wx:if="{{showSecretKey}}">
-      <text class="field-label">API Key</text>
-      <input class="input-field" placeholder="百度 API Key" value="{{apiKey}}" bindinput="onApiKeyInput" />
-      <text class="field-label">Secret Key</text>
-      <input class="input-field" placeholder="百度 Secret Key" value="{{secretKey}}" bindinput="onSecretKeyInput" />
-      <button class="save-btn" bindtap="saveKeys">保存</button>
-      <text class="help-text">获取地址：console.bce.baidu.com/qianfan</text>
-    </view>
-
-    <!-- 其他只需要一个Key -->
-    <view class="api-key-section" wx:else>
-      <text class="field-label">API Key</text>
-      <view class="input-row">
-        <input class="input-field" placeholder="输入你的 API Key" password="true" value="{{apiKey}}" bindinput="onApiKeyInput" />
-        <button class="save-btn" bindtap="saveKeys">保存</button>
-      </view>
-      <text class="help-text">获取地址：{{providerName}} 开放平台</text>
+    <view class="mode-btn {{isChatMode ? 'active' : ''}}" bindtap="switchMode" data-mode="chat">
+      💬 AI 对话
     </view>
   </view>
 
@@ -44,40 +15,67 @@
     <text class="blocker-text">{{blocker}}</text>
   </view>
 
-  <block wx:else>
+  <!-- 一键分析模式 -->
+  <block wx:elif="{{!isChatMode}}">
     <view class="card">
-      <text class="card-title">💬 让 AI 给你写一份专属解读</text>
-      <text class="card-sub">使用 {{providerName}} 生成你的性格分析报告</text>
+      <text class="card-title">📊 一键性格分析</text>
+      <text class="card-sub">{{useCloud ? '使用云端 AI 为你生成专属分析' : '基于你的测试数据生成分析'}}</text>
 
       <button class="btn btn-primary" bindtap="generate" disabled="{{running}}">{{btnLabel}}</button>
 
-      <view class="text-card" wx:if="{{text}}">
+      <view class="text-card" wx:if="{{text !== '（点击下方按钮开始）'}}">
         <text class="text-body" selectable="true" user-select="true">{{text}}</text>
       </view>
 
-      <button class="btn btn-secondary" wx:if="{{text !== '（点击下方按钮开始）'}}" bindtap="copyText">📋 复制解读</button>
+      <button class="btn btn-secondary" wx:if="{{text !== '（点击下方按钮开始）'}}" bindtap="copyText">📋 复制分析</button>
+    </view>
+
+    <view class="card tips-card">
+      <text class="card-title">💡 说明</text>
+      <view class="tip-item" wx:if="{{useCloud}}">
+        <text class="tip-num">✓</text>
+        <text class="tip-text">已接入云端 AI，可直接使用，无需配置</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-num">{{useCloud ? '2' : '1'}}</text>
+        <text class="tip-text">分析基于你的 MBTI、口味、星座、恋爱测试结果</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-num">{{useCloud ? '3' : '2'}}</text>
+        <text class="tip-text">完成更多测试可获得更完整的分析</text>
+      </view>
     </view>
   </block>
 
-  <!-- 使用说明 -->
-  <view class="card tips-card">
-    <text class="card-title">💡 白嫖指南</text>
-    <view class="tip-item">
-      <text class="tip-num">1</text>
-      <text class="tip-text">去百度智能云注册账号（有百度账号即可）</text>
+  <!-- AI 对话模式 -->
+  <block wx:else>
+    <view class="card chat-card">
+      <text class="card-title">💬 和 AI 聊聊你的性格</text>
+      <text class="card-sub">{{useCloud ? '云端 AI 实时回复' : '本地分析模式'}}</text>
+
+      <!-- 聊天消息列表 -->
+      <scroll-view class="chat-messages" scroll-y="true" scroll-into-view="{{chatScrollId}}">
+        <view class="chat-welcome" wx:if="{{chatMessages.length === 0}}">
+          <text class="welcome-text">👋 你好！我是你的性格分析助手。</text>
+          <text class="welcome-hint">你可以问我关于性格、人际关系、职业发展等问题～</text>
+        </view>
+        <view wx:for="{{chatMessages}}" wx:key="index" id="msg-{{index}}" class="chat-msg {{item.role === 'user' ? 'msg-user' : 'msg-ai'}}">
+          <text class="msg-role">{{item.role === 'user' ? '🧑 我' : '🤖 AI'}}</text>
+          <text class="msg-content" selectable="true" user-select="true">{{item.content}}</text>
+        </view>
+        <view wx:if="{{running}}" class="chat-msg msg-ai" id="msg-loading">
+          <text class="msg-role">🤖 AI</text>
+          <text class="msg-content typing">思考中…</text>
+        </view>
+        <view id="chat-bottom" style="height: 1rpx;"></view>
+      </scroll-view>
+
+      <!-- 输入框 -->
+      <view class="chat-input-row">
+        <input class="chat-input" placeholder="问我任何关于性格的问题…" value="{{userInput}}" bindinput="onChatInput" bindconfirm="sendMessage" confirm-type="send" />
+        <view class="send-btn" style="background: {{themeColor}}" bindtap="sendMessage">发送</view>
+      </view>
     </view>
-    <view class="tip-item">
-      <text class="tip-num">2</text>
-      <text class="tip-text">进入千帆大模型平台，创建应用获取 API Key</text>
-    </view>
-    <view class="tip-item">
-      <text class="tip-num">3</text>
-      <text class="tip-text">复制 API Key 和 Secret Key 粘贴到上方</text>
-    </view>
-    <view class="tip-item">
-      <text class="tip-num">4</text>
-      <text class="tip-text">ERNIE-Speed-8K 模型完全免费，随便用！</text>
-    </view>
-  </view>
+  </block>
 
 </view>

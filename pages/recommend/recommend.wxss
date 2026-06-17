@@ -163,6 +163,22 @@
   flex: 1;
 }
 
+.rec-item-clickable {
+  padding: 16rpx 12rpx;
+  border-radius: 12rpx;
+  transition: background 0.2s;
+}
+
+.rec-item-clickable:active {
+  background: #f3f4f6;
+}
+
+.rec-action {
+  font-size: 28rpx;
+  margin-left: 12rpx;
+  flex-shrink: 0;
+}
+
 /* 按钮 */
 .btn {
   border-radius: 16rpx;

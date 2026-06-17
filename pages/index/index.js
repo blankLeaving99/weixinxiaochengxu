@@ -1,5 +1,22 @@
 const storage = require('../../utils/storage')
+const api = require('../../utils/api')
 const app = getApp()
+
+// tabBar 页面列表，需要用 wx.switchTab 跳转
+const TAB_BAR_PAGES = new Set([
+  '/pages/index/index',
+  '/pages/personality/personality',
+  '/pages/achievements/achievements',
+  '/pages/settings/settings'
+])
+
+function navigateTo(page) {
+  if (TAB_BAR_PAGES.has(page)) {
+    wx.switchTab({ url: page })
+  } else {
+    wx.navigateTo({ url: page })
+  }
+}
 
 const BANNERS = [
   { icon: '🔬', title: 'MBTI 职业性格测试', desc: '48题专业版，测出你的16型人格', color: '#2563eb', bg: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', page: '/pages/mbti/mbti' },
@@ -54,6 +71,24 @@ Page({
     xpProgress: 0,
     totalXp: 0,
     themeColor: '#7c3aed'
+  },
+
+  onLoad() {
+    this._themeCb = (color) => {
+      this.setData({ themeColor: color })
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: color, animation: { duration: 300, timingFunc: 'easeIn' } })
+      // 重建测试列表中依赖主题色的数据
+      const tests = this.data.tests.map(t => {
+        if (t.isOverview) return Object.assign({}, t, { statusColor: color })
+        return t
+      })
+      this.setData({ tests })
+    }
+    app.registerThemeCallback(this._themeCb)
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
   },
 
   onShow() {
@@ -134,15 +169,15 @@ Page({
   },
 
   onBannerTap(e) {
-    wx.navigateTo({ url: e.currentTarget.dataset.page })
+    navigateTo(e.currentTarget.dataset.page)
   },
 
   goToTest(e) {
-    wx.navigateTo({ url: e.currentTarget.dataset.page })
+    navigateTo(e.currentTarget.dataset.page)
   },
 
   goTool(e) {
-    wx.navigateTo({ url: e.currentTarget.dataset.page })
+    navigateTo(e.currentTarget.dataset.page)
   },
 
   goAllTests() {

@@ -1,4 +1,5 @@
 const storage = require('../../utils/storage')
+const api = require('../../utils/api')
 const {
   mbtiCompat, tasteCompat, elementScore, getElementOf
 } = require('../../utils/helpers')
@@ -21,26 +22,59 @@ Page({
     themeColor: '#7c3aed'
   },
 
-  onLoad(options) {
+  async onLoad(options) {
+    this._themeCb = () => {
+      const themeColor = app.getThemeColor()
+      this.setData({ themeColor })
+      wx.setNavigationBarColor({
+        frontColor: '#ffffff',
+        backgroundColor: themeColor,
+        animation: { duration: 300, timingFunc: 'easeIn' }
+      })
+    }
+    app.registerThemeCallback(this._themeCb)
+
     const themeColor = app.getThemeColor()
     this.setData({ themeColor })
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: themeColor,
-      animation: { duration: 300, timingFunc: 'easeIn' }
+      animation: { duration: 0, timingFunc: 'easeIn' }
     })
 
     const friendName = decodeURIComponent(options.name || '')
-    const friend = storage.getFriends()[friendName]
+    const friendId = options.friendId || ''
     const profile = storage.getProfile()
     const myName = profile.name || '我'
-    if (!friend) {
-      wx.showToast({ title: '好友不存在', icon: 'none' })
+
+    let friendResults = null
+
+    try {
+      if (friendId) {
+        // 从后端获取好友测试结果
+        const res = await api.getFriendResults(friendId)
+        if (res.code === 0) {
+          friendResults = res.results
+        }
+      } else {
+        // 本地好友
+        const friend = storage.getFriends()[friendName]
+        if (friend) {
+          friendResults = friend.results || {}
+        }
+      }
+    } catch (e) {
+      console.error('获取好友数据失败:', e)
+    }
+
+    if (!friendResults) {
+      wx.showToast({ title: '好友数据不存在', icon: 'none' })
       setTimeout(() => wx.navigateBack(), 800)
       return
     }
+
     const my = storage.getMyResults()
-    const fr = friend.results || {}
+    const fr = friendResults
     const cards = []
     const scores = []
 
@@ -133,5 +167,9 @@ Page({
 
     wx.setNavigationBarTitle({ title: `🔍 与 ${friendName} 对比` })
     this.setData({ myName, friendName, cards, overall, overallComment })
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
   }
 })

@@ -95,6 +95,18 @@ Page({
     themeColor: '#7c3aed'
   },
 
+  onLoad() {
+    this._themeCb = (color) => {
+      this.setData({ themeColor: color })
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: color, animation: { duration: 300, timingFunc: 'easeIn' } })
+    }
+    app.registerThemeCallback(this._themeCb)
+  },
+
+  onUnload() {
+    app.unregisterThemeCallback(this._themeCb)
+  },
+
   onShow() {
     const themeColor = app.getThemeColor()
     this.setData({ themeColor })
@@ -143,5 +155,48 @@ Page({
 
   goTest() {
     wx.switchTab({ url: '/pages/personality/personality' })
+  },
+
+  // 复制推荐内容
+  copyRec(e) {
+    const text = e.currentTarget.dataset.text
+    wx.setClipboardData({
+      data: text,
+      success: () => {
+        wx.showToast({ title: '已复制，去搜索吧', icon: 'none' })
+      }
+    })
+  },
+
+  // 搜索音乐
+  searchMusic(e) {
+    const name = e.currentTarget.dataset.text
+    wx.setClipboardData({
+      data: name,
+      success: () => {
+        wx.showModal({
+          title: '🎵 搜索音乐',
+          content: `已复制「${name}」到剪贴板，打开音乐 App 粘贴搜索即可收听～`,
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      }
+    })
+  },
+
+  // 搜索电影
+  searchMovie(e) {
+    const name = e.currentTarget.dataset.text
+    wx.setClipboardData({
+      data: name,
+      success: () => {
+        wx.showModal({
+          title: '🎬 搜索电影',
+          content: `已复制「${name}」到剪贴板，打开影视 App 粘贴搜索即可观看～`,
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      }
+    })
   }
 })
