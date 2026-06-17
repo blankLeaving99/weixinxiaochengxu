@@ -52,6 +52,10 @@
   box-sizing: border-box;
   margin-bottom: 24rpx;
   background: #fafafa;
+  height: 88rpx;
+  line-height: 88rpx;
+  display: flex;
+  align-items: center;
 }
 
 .error-msg {
