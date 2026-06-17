@@ -89,6 +89,16 @@ router.get('/:id', auth, async (req, res) => {
     try { challenge.to_answers = JSON.parse(challenge.to_answers || 'null') } catch (e) {}
     try { challenge.result = JSON.parse(challenge.result || 'null') } catch (e) {}
 
+    // 答案可见性：只有对方授权后才能看到对方的答案
+    const isFrom = challenge.from_user_id == req.user.id
+    if (isFrom) {
+      // 我是发起者：只有对方授权后才能看到对方答案
+      challenge.to_answers = challenge.to_share ? challenge.to_answers : null
+    } else {
+      // 我是接收者：只有发起者授权后才能看到发起者答案
+      challenge.from_answers = challenge.from_share ? challenge.from_answers : null
+    }
+
     res.json({ code: 0, challenge })
   } catch (err) {
     res.json({ code: -1, error: err.message })
@@ -227,6 +237,31 @@ router.get('/:id/result', auth, async (req, res) => {
         testKey: c.test_key
       }
     })
+  } catch (err) {
+    res.json({ code: -1, error: err.message })
+  }
+})
+
+// 授权/取消授权查看我的答案
+router.post('/:id/share', auth, async (req, res) => {
+  const { share } = req.body
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM challenges WHERE id = ? AND (from_user_id = ? OR to_user_id = ?)',
+      [req.params.id, req.user.id, req.user.id]
+    )
+    if (rows.length === 0) return res.json({ code: -1, error: '挑战不存在' })
+
+    const challenge = rows[0]
+    const isFrom = challenge.from_user_id == req.user.id
+
+    if (isFrom) {
+      await pool.query('UPDATE challenges SET from_share = ? WHERE id = ?', [share ? 1 : 0, challenge.id])
+    } else {
+      await pool.query('UPDATE challenges SET to_share = ? WHERE id = ?', [share ? 1 : 0, challenge.id])
+    }
+
+    res.json({ code: 0, message: share ? '已授权查看' : '已取消授权' })
   } catch (err) {
     res.json({ code: -1, error: err.message })
   }

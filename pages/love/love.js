@@ -36,6 +36,17 @@ Page({
     friendList: [],
     // 历史记录
     historyList: [],
+    // 答案详情
+    detailFrom: '',
+    detailTo: '',
+    detailScore: 0,
+    detailComment: '',
+    myAnswers: [],
+    theirAnswers: [],
+    myShare: false,
+    theirShareAllowed: false,
+    detailChallengeId: null,
+    detailIsFrom: false,
     // 结果
     score: 0,
     matchCount: 0,
@@ -430,8 +441,89 @@ Page({
     if (unlocked.length) setTimeout(() => showUnlocked(unlocked), 500)
   },
 
+  // ===== 查看挑战详情 =====
+
+  async viewChallengeDetail(e) {
+    const challengeId = e.currentTarget.dataset.id
+    try {
+      const res = await api.getChallenge(challengeId)
+      if (res.code !== 0) {
+        wx.showToast({ title: '加载失败', icon: 'none' })
+        return
+      }
+
+      const challenge = res.challenge
+      let result = {}
+      try { result = typeof challenge.result === 'string' ? JSON.parse(challenge.result) : (challenge.result || {}) } catch (e) {}
+
+      const user = api.getUser()
+      const myId = user ? user.id : null
+      const isFrom = challenge.from_user_id == myId
+
+      // 构建答案对比
+      const myAnswers = []
+      const theirAnswers = []
+      const myAnsRaw = isFrom ? challenge.from_answers : challenge.to_answers
+      const theirAnsRaw = isFrom ? challenge.to_answers : challenge.from_answers
+      const myAns = Array.isArray(myAnsRaw) ? myAnsRaw : (typeof myAnsRaw === 'string' ? JSON.parse(myAnsRaw) : [])
+      const theirAns = Array.isArray(theirAnsRaw) ? theirAnsRaw : (typeof theirAnsRaw === 'string' ? JSON.parse(theirAnsRaw) : [])
+
+      for (let i = 0; i < QUESTIONS.length; i++) {
+        const [q, opts] = QUESTIONS[i]
+        if (myAns[i] != null) {
+          myAnswers.push({
+            question: q,
+            myChoice: opts[myAns[i]] || `选项${myAns[i]}`
+          })
+        }
+        if (theirAns[i] != null) {
+          theirAnswers.push({
+            question: q,
+            theirChoice: opts[theirAns[i]] || `选项${theirAns[i]}`,
+            same: myAns[i] === theirAns[i]
+          })
+        }
+      }
+
+      const score = result.score || 0
+      let comment
+      if (score >= 80) comment = '天生一对！默契度爆表 💞'
+      else if (score >= 60) comment = '高度合拍，继续培养感情 💖'
+      else if (score >= 40) comment = '有戏！多沟通会更好 💗'
+      else comment = '差异很大，但互补也是吸引力哦 💔'
+
+      this.setData({
+        phase: 'detail',
+        detailFrom: challenge.from_nickname,
+        detailTo: challenge.to_nickname,
+        detailScore: score,
+        detailComment: comment,
+        myAnswers,
+        theirAnswers,
+        myShare: isFrom ? !!challenge.from_share : !!challenge.to_share,
+        theirShareAllowed: isFrom ? !!challenge.to_share : !!challenge.from_share,
+        detailChallengeId: challengeId,
+        detailIsFrom: isFrom
+      })
+    } catch (e) {
+      wx.showToast({ title: '加载失败', icon: 'none' })
+    }
+  },
+
+  async toggleShare(e) {
+    const share = e.detail.value
+    this.setData({ myShare: share })
+    try {
+      await api.shareChallengeAnswers(this.data.detailChallengeId, share)
+      wx.showToast({ title: share ? '已授权' : '已取消授权', icon: 'none' })
+    } catch (e) {
+      this.setData({ myShare: !share })
+    }
+  },
+
   goBack() {
     this.setData({ phase: 'choose' })
+    this.loadHistory()
   },
 
   finish() {

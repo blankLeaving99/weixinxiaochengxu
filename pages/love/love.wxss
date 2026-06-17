@@ -110,11 +110,85 @@
   font-weight: bold;
 }
 
+.history-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4rpx;
+}
+
 .history-date {
   font-size: 22rpx;
   color: #9ca3af;
+}
+
+.history-detail-btn {
+  font-size: 24rpx;
+  color: #ec4899;
+}
+
+/* 答案详情 */
+.share-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.share-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.share-text {
+  flex: 1;
+}
+
+.share-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1f2937;
   display: block;
-  margin-top: 4rpx;
+}
+
+.share-desc {
+  font-size: 22rpx;
+  color: #9ca3af;
+  display: block;
+}
+
+.share-hint {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 28rpx;
+  padding: 20rpx;
+}
+
+.answer-item {
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.answer-item:last-child {
+  border-bottom: none;
+}
+
+.answer-q {
+  font-size: 26rpx;
+  color: #374151;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.answer-a {
+  font-size: 24rpx;
+  color: #6b7280;
+  display: block;
 }
 
 .card {

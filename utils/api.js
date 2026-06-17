@@ -312,6 +312,10 @@ async function getChallengeResult(id) {
   return request('GET', `/challenge/${id}/result`)
 }
 
+async function shareChallengeAnswers(id, share) {
+  return request('POST', `/challenge/${id}/share`, { share })
+}
+
 // ===== 健康检查 =====
 
 async function healthCheck() {
@@ -369,6 +373,7 @@ module.exports = {
   acceptChallenge,
   submitChallengeAnswers,
   getChallengeResult,
+  shareChallengeAnswers,
   // 其他
   healthCheck
 }

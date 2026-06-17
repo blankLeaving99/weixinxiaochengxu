@@ -26,12 +26,15 @@
     <!-- 历史挑战记录 -->
     <view wx:if="{{historyList.length > 0}}" class="card">
       <text class="section-title">📋 历史挑战记录</text>
-      <view wx:for="{{historyList}}" wx:key="id" class="history-item">
+      <view wx:for="{{historyList}}" wx:key="id" class="history-item" data-id="{{item.id}}" bindtap="viewChallengeDetail">
         <view class="history-top">
           <text class="history-names">{{item.from_nickname}} ❤ {{item.to_nickname}}</text>
           <text class="history-score" style="color: {{item.scoreColor}}">{{item.score}}%</text>
         </view>
-        <text class="history-date">{{item.date}}</text>
+        <view class="history-bottom">
+          <text class="history-date">{{item.date}}</text>
+          <text class="history-detail-btn">查看详情 ›</text>
+        </view>
       </view>
     </view>
   </view>
@@ -125,6 +128,54 @@
       <text class="result-comment">{{comment}}</text>
     </view>
     <button class="btn btn-pink" bindtap="finish">完成，回到主页</button>
+  </view>
+
+  <!-- 答案详情 -->
+  <view wx:elif="{{phase === 'detail'}}">
+    <view class="card result-card">
+      <text class="result-names">{{detailFrom}} ❤ {{detailTo}}</text>
+      <text class="result-score-big">{{detailScore}}%</text>
+      <text class="result-comment">{{detailComment}}</text>
+    </view>
+
+    <!-- 授权开关 -->
+    <view class="card">
+      <view class="share-row">
+        <view class="share-left">
+          <text class="share-icon">🔓</text>
+          <view class="share-text">
+            <text class="share-title">允许对方查看我的答案</text>
+            <text class="share-desc">开启后对方可以看到你的每题选择</text>
+          </view>
+        </view>
+        <switch checked="{{myShare}}" color="#ec4899" bindchange="toggleShare" />
+      </view>
+    </view>
+
+    <!-- 我的答案 -->
+    <view wx:if="{{myAnswers.length > 0}}" class="card">
+      <text class="section-title">📝 我的答案</text>
+      <view wx:for="{{myAnswers}}" wx:key="index" class="answer-item">
+        <text class="answer-q">{{index + 1}}. {{item.question}}</text>
+        <text class="answer-a">我选：{{item.myChoice}}</text>
+      </view>
+    </view>
+
+    <!-- 对方的答案（需要授权） -->
+    <view wx:if="{{theirAnswers.length > 0}}" class="card">
+      <text class="section-title">💕 对方的答案</text>
+      <view wx:for="{{theirAnswers}}" wx:key="index" class="answer-item">
+        <text class="answer-q">{{index + 1}}. {{item.question}}</text>
+        <text class="answer-a" style="color: {{item.same ? '#10b981' : '#9ca3af'}}">
+          对方选：{{item.theirChoice}} {{item.same ? '✓ 一致' : ''}}
+        </text>
+      </view>
+    </view>
+    <view wx:elif="{{!theirShareAllowed}}" class="card">
+      <text class="share-hint">🔒 对方尚未授权查看答案</text>
+    </view>
+
+    <button class="btn btn-outline" bindtap="goBack">返回</button>
   </view>
 
 </view>
