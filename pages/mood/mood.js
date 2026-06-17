@@ -181,10 +181,11 @@ Page({
         tagCount[tag] = (tagCount[tag] || 0) + 1
       })
     })
-    const topTags = Object.entries(tagCount)
-      .sort((a, b) => b[1] - a[1])
+    const tagKeys = Object.keys(tagCount)
+    const topTags = tagKeys
+      .map(tag => ({ tag, count: tagCount[tag] }))
+      .sort((a, b) => b.count - a.count)
       .slice(0, 5)
-      .map(([tag, count]) => ({ tag, count }))
 
     this.setData({
       stats: { avgMood, happyDays, totalDays, topTags }

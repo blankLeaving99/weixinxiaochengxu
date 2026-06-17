@@ -195,8 +195,9 @@ Page({
       Object.keys(data).forEach(k => {
         if (!k.startsWith('_')) results[k] = data[k]
       })
-      for (const [key, result] of Object.entries(results)) {
-        await api.saveTestResult(key, result).catch(() => {})
+      const resultKeys = Object.keys(results)
+      for (let i = 0; i < resultKeys.length; i++) {
+        await api.saveTestResult(resultKeys[i], results[resultKeys[i]]).catch(() => {})
       }
 
       // 同步积分（用 set 覆盖，不用 add 累加）
