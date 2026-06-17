@@ -140,12 +140,12 @@ router.post('/:id/answer', auth, async (req, res) => {
 
     if (isFrom) {
       await pool.query(
-        'UPDATE challenges SET from_answers = CAST(? AS JSON), status = ? WHERE id = ?',
+        'UPDATE challenges SET from_answers = ?, status = ? WHERE id = ?',
         [answersJson, challenge.status === 'pending' ? 'accepted' : challenge.status, challenge.id]
       )
     } else {
       await pool.query(
-        'UPDATE challenges SET to_answers = CAST(? AS JSON) WHERE id = ?',
+        'UPDATE challenges SET to_answers = ? WHERE id = ?',
         [answersJson, challenge.id]
       )
     }
