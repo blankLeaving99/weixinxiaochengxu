@@ -5,6 +5,77 @@
   box-sizing: border-box;
 }
 
+/* 模式选择卡片 */
+.mode-card {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+}
+
+.mode-card:active {
+  background: #fdf2f8;
+}
+
+.mode-emoji {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+}
+
+.mode-text {
+  flex: 1;
+}
+
+.mode-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  display: block;
+}
+
+.mode-desc {
+  font-size: 24rpx;
+  color: #9ca3af;
+  display: block;
+  margin-top: 4rpx;
+}
+
+.mode-arrow {
+  font-size: 36rpx;
+  color: #d1d5db;
+}
+
+/* 好友列表 */
+.friend-item {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 32rpx;
+}
+
+.friend-item:active {
+  background: #fdf2f8;
+}
+
+.friend-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: #1f2937;
+}
+
+.empty-hint {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 28rpx;
+  padding: 40rpx;
+}
+
+/* 返回按钮 */
+.btn-outline {
+  background: #fff;
+  color: #374151;
+  border: 2rpx solid #e5e7eb;
+  margin-top: 16rpx;
+}
+
 .card {
   background: #fff;
   border-radius: 20rpx;

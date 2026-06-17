@@ -1,7 +1,54 @@
 <view class="page-wrap">
 
-  <!-- 设置阶段：输入玩家昵称 -->
-  <view wx:if="{{phase === 'setup'}}">
+  <!-- 选择模式 -->
+  <view wx:if="{{phase === 'choose'}}">
+    <view class="card">
+      <text class="page-title">💕 恋爱默契大挑战</text>
+      <text class="page-subtitle">两位玩家各答 12 道题目，测测你们的默契度~</text>
+    </view>
+    <view class="card mode-card" bindtap="chooseLocal">
+      <text class="mode-emoji">📱</text>
+      <view class="mode-text">
+        <text class="mode-title">把手机交给对方</text>
+        <text class="mode-desc">两人在同一部手机上轮流答题</text>
+      </view>
+      <text class="mode-arrow">›</text>
+    </view>
+    <view class="card mode-card" bindtap="chooseRemote">
+      <text class="mode-emoji">💌</text>
+      <view class="mode-text">
+        <text class="mode-title">发送给好友</text>
+        <text class="mode-desc">邀请好友在各自手机上答题</text>
+      </view>
+      <text class="mode-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 选择好友（远程模式） -->
+  <view wx:elif="{{phase === 'selectFriend'}}">
+    <view class="card">
+      <text class="page-title">选择挑战好友</text>
+      <text class="page-subtitle">选择一位好友发送挑战邀请</text>
+    </view>
+    <view wx:if="{{friendList.length === 0}}" class="card">
+      <text class="empty-hint">暂无好友，请先添加好友</text>
+    </view>
+    <view
+      wx:for="{{friendList}}"
+      wx:key="id"
+      class="card friend-item"
+      data-id="{{item.id}}"
+      data-name="{{item.name}}"
+      bindtap="selectFriend"
+    >
+      <text class="friend-name">👤 {{item.name}}</text>
+      <text class="mode-arrow">›</text>
+    </view>
+    <button class="btn btn-outline" bindtap="goBack">返回</button>
+  </view>
+
+  <!-- 本地模式：输入昵称 -->
+  <view wx:elif="{{phase === 'setup'}}">
     <view class="card">
       <text class="page-title">💕 恋爱默契大挑战</text>
       <text class="page-subtitle">规则：两位玩家依次作答 12 道题目，对方作答时请勿偷看哦~</text>
@@ -15,7 +62,7 @@
     </view>
   </view>
 
-  <!-- 等待对方答题 -->
+  <!-- 等待对方答题（远程模式） -->
   <view wx:elif="{{phase === 'waiting'}}">
     <view class="card">
       <view class="handoff-box">
@@ -24,9 +71,10 @@
         <text class="handoff-hint">对方答完后你将自动看到结果</text>
       </view>
     </view>
+    <button class="btn btn-outline" bindtap="finish">返回首页</button>
   </view>
 
-  <!-- 交接阶段 -->
+  <!-- 交接阶段（本地模式） -->
   <view wx:elif="{{phase === 'handoff'}}">
     <view class="card">
       <view class="handoff-box">

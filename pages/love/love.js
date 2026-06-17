@@ -21,9 +21,7 @@ const TOTAL = QUESTIONS.length
 
 Page({
   data: {
-    // 模式：'local'（本地双人） | 'remote'（远程挑战）
-    mode: 'local',
-    phase: 'setup',       // 'setup' | 'handoff' | 'question' | 'result' | 'waiting'
+    phase: 'choose',    // 'choose' | 'selectFriend' | 'setup' | 'handoff' | 'question' | 'waiting' | 'result'
     playerAName: '小明',
     playerBName: '小红',
     handoffMsg: '',
@@ -35,8 +33,7 @@ Page({
     // 远程模式
     challengeId: null,
     friendName: '',
-    myRole: '',            // 'from'（发起者）| 'to'（接收者）
-    waitingMsg: '',
+    friendList: [],
     // 结果
     score: 0,
     matchCount: 0,
@@ -48,20 +45,71 @@ Page({
     this.playerBAnswers = []
     this.currentPlayer = 'A'
 
-    // 检查是否是远程挑战模式
+    // 如果是通过挑战通知进入的（远程模式）
     if (options.challengeId) {
       const challengeId = parseInt(options.challengeId)
       const friendName = decodeURIComponent(options.friendName || '好友')
-      this.setData({
-        mode: 'remote',
-        challengeId,
-        friendName
-      })
+      this.setData({ challengeId, friendName })
       await this.loadChallenge(challengeId)
     }
   },
 
-  // 加载远程挑战
+  // ===== 模式选择 =====
+
+  chooseLocal() {
+    this.setData({ phase: 'setup' })
+  },
+
+  async chooseRemote() {
+    // 加载好友列表
+    try {
+      const res = await api.getFriends()
+      if (res.code === 0 && res.friends && res.friends.length > 0) {
+        const friendList = res.friends.map(f => ({
+          id: f.friend_id,
+          name: f.nickname || '未知'
+        }))
+        this.setData({ phase: 'selectFriend', friendList })
+      } else {
+        wx.showToast({ title: '暂无好友，请先添加', icon: 'none' })
+      }
+    } catch (e) {
+      wx.showToast({ title: '获取好友列表失败', icon: 'none' })
+    }
+  },
+
+  // 选择好友发起挑战
+  async selectFriend(e) {
+    const friendId = e.currentTarget.dataset.id
+    const friendName = e.currentTarget.dataset.name
+
+    wx.showModal({
+      title: '发起挑战',
+      content: `向 ${friendName} 发起恋爱默契大挑战？`,
+      confirmText: '发起',
+      success: async (m) => {
+        if (!m.confirm) return
+        try {
+          const res = await api.createChallenge(friendId, 'love')
+          if (res.code === 0) {
+            this.setData({
+              phase: 'waiting',
+              challengeId: res.challengeId,
+              friendName,
+              waitingMsg: `挑战已发送给 ${friendName}，等待对方答题...`
+            })
+          } else {
+            wx.showToast({ title: res.error || '发送失败', icon: 'none' })
+          }
+        } catch (e) {
+          wx.showToast({ title: '发送失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  // ===== 远程模式：加载挑战 =====
+
   async loadChallenge(challengeId) {
     try {
       const res = await api.getChallenge(challengeId)
@@ -72,12 +120,11 @@ Page({
       }
 
       const challenge = res.challenge
-      const myId = api.getUser()?.id
+      const user = api.getUser()
+      const myId = user ? user.id : null
       const isFrom = challenge.from_user_id === myId
-      this.myRole = isFrom ? 'from' : 'to'
 
       if (challenge.status === 'completed') {
-        // 已完成，直接显示结果
         this.showRemoteResult(challenge)
         return
       }
@@ -92,7 +139,6 @@ Page({
             playerAName: challenge.from_nickname,
             playerBName: challenge.to_nickname
           })
-          // 开始轮询检查对方是否答完
           this.startPolling(challengeId)
         } else {
           // 我还没答题
@@ -105,10 +151,9 @@ Page({
       } else {
         // 我是接收者
         if (challenge.status === 'pending') {
-          // 需要先接受挑战
           wx.showModal({
             title: '💕 挑战邀请',
-            content: `${challenge.from_nickname} 向你发起了恋爱默契大挑战！`,
+            content: `${challenge.from_nickname} 向你发起恋爱默契大挑战！`,
             confirmText: '接受挑战',
             success: async (m) => {
               if (m.confirm) {
@@ -123,15 +168,13 @@ Page({
               }
             }
           })
-        } else if (challenge.status === 'accepted' && !challenge.to_answers) {
-          // 已接受，还没答题
+        } else if (!challenge.to_answers) {
           this.setData({
             phase: 'setup',
             playerAName: challenge.to_nickname,
             playerBName: challenge.from_nickname
           })
-        } else if (challenge.to_answers) {
-          // 已答过，等待对方
+        } else {
           this.setData({
             phase: 'waiting',
             waitingMsg: `等待 ${challenge.from_nickname} 答题中...`,
@@ -156,7 +199,7 @@ Page({
           this.showRemoteResult(res.challenge)
         }
       } catch (e) {}
-    }, 3000) // 每3秒检查一次
+    }, 3000)
   },
 
   // 显示远程挑战结果
@@ -172,7 +215,6 @@ Page({
     else if (score >= 40) comment = '有戏！多沟通会更好 💗'
     else comment = '差异很大，但互补也是吸引力哦 💔'
 
-    // 保存到本地
     const localResult = {
       a: challenge.from_nickname,
       b: challenge.to_nickname,
@@ -194,6 +236,8 @@ Page({
     })
   },
 
+  // ===== 本地模式 =====
+
   onNameAInput(e) {
     this.setData({ playerAName: e.detail.value })
   },
@@ -209,14 +253,7 @@ Page({
     this.playerAAnswers = []
     this.playerBAnswers = []
     this.currentPlayer = 'A'
-
-    if (this.data.mode === 'remote') {
-      // 远程模式：直接开始自己的答题
-      this.showQuestion(0)
-    } else {
-      // 本地模式：交接手机
-      this.showHandoff(`请把屏幕交给 ${nameA}`)
-    }
+    this.showHandoff(`请把屏幕交给 ${nameA}`)
   },
 
   showHandoff(msg) {
@@ -230,9 +267,11 @@ Page({
   showQuestion(idx) {
     const [q, opts] = QUESTIONS[idx]
     let name
-    if (this.data.mode === 'remote') {
+    if (this.data.challengeId) {
+      // 远程模式：只显示自己的名字
       name = this.data.playerAName
     } else {
+      // 本地模式：显示当前玩家
       name = this.currentPlayer === 'A'
         ? this.data.playerAName
         : this.data.playerBName
@@ -250,8 +289,8 @@ Page({
   chooseOption(e) {
     const i = e.currentTarget.dataset.index
 
-    if (this.data.mode === 'remote') {
-      // 远程模式：只收集自己的答案
+    if (this.data.challengeId) {
+      // 远程模式
       this.playerAAnswers.push(i)
       const next = this.data.idx + 1
       if (next >= TOTAL) {
@@ -286,7 +325,6 @@ Page({
     try {
       await api.submitChallengeAnswers(this.data.challengeId, this.playerAAnswers)
 
-      // 检查对方是否也答完了
       const res = await api.getChallenge(this.data.challengeId)
       if (res.code === 0 && res.challenge.status === 'completed') {
         this.showRemoteResult(res.challenge)
@@ -325,6 +363,10 @@ Page({
     const unlocked = checkAfterTest('love', result)
     this.setData({ phase: 'result', score, matchCount, comment })
     if (unlocked.length) setTimeout(() => showUnlocked(unlocked), 500)
+  },
+
+  goBack() {
+    this.setData({ phase: 'choose' })
   },
 
   finish() {
