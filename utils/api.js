@@ -244,6 +244,10 @@ async function addPoints(amount, reason) {
   return request('POST', '/points/add', { amount, reason })
 }
 
+async function setPoints(xp, level) {
+  return request('POST', '/points/set', { xp, level })
+}
+
 // ===== 心情日记 =====
 
 async function getMoodHistory() {
@@ -346,6 +350,7 @@ module.exports = {
   // 积分
   getPoints,
   addPoints,
+  setPoints,
   // 心情
   getMoodHistory,
   addMood,

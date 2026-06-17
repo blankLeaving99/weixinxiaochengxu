@@ -118,6 +118,26 @@ Page({
   // 从后端同步数据到本地（直接写入存储，不触发回调避免回写循环）
   async syncFromServer() {
     try {
+      // 同步昵称
+      const userRes = await api.getUserInfo()
+      if (userRes.code === 0 && userRes.user) {
+        const data = storage.load()
+        const profile = data._profile || {}
+        if (userRes.user.nickname && userRes.user.nickname !== profile.name) {
+          profile.name = userRes.user.nickname
+          data._profile = profile
+          storage.save(data)
+        }
+      }
+
+      // 同步设置
+      const settingsRes = await api.getSettings()
+      if (settingsRes.code === 0 && settingsRes.settings) {
+        const data = storage.load()
+        data._settings = Object.assign({}, data._settings || {}, settingsRes.settings)
+        storage.save(data)
+      }
+
       // 同步测试结果（绕过 setResult 回调）
       const testRes = await api.getTestResults()
       if (testRes.code === 0) {
@@ -164,6 +184,12 @@ Page({
   // 将本地数据同步到服务器（恢复备份后调用）
   async syncToServer(data) {
     try {
+      // 同步昵称
+      const profile = data._profile
+      if (profile && profile.name) {
+        await api.updateNickname(profile.name).catch(() => {})
+      }
+
       // 同步测试结果
       const results = {}
       Object.keys(data).forEach(k => {
@@ -173,10 +199,10 @@ Page({
         await api.saveTestResult(key, result).catch(() => {})
       }
 
-      // 同步积分
+      // 同步积分（用 set 覆盖，不用 add 累加）
       const pts = data._points
-      if (pts && pts.xp > 0) {
-        await api.addPoints(pts.xp, 'backup_restore').catch(() => {})
+      if (pts) {
+        await api.setPoints(pts.xp || 0, pts.level || 1).catch(() => {})
       }
 
       // 同步成就

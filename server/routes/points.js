@@ -60,6 +60,23 @@ router.post('/add', auth, async (req, res) => {
   }
 })
 
+// 设置积分（恢复备份用，直接覆盖而非累加）
+router.post('/set', auth, async (req, res) => {
+  const { xp, level } = req.body
+  if (xp == null) return res.json({ code: -1, error: '积分数不能为空' })
+
+  try {
+    await pool.query('INSERT IGNORE INTO points (user_id) VALUES (?)', [req.user.id])
+    await pool.query(
+      'UPDATE points SET xp = ?, level = ?, total_earned = ? WHERE user_id = ?',
+      [xp, level || 1, xp, req.user.id]
+    )
+    res.json({ code: 0, message: '积分已设置' })
+  } catch (err) {
+    res.json({ code: -1, error: err.message })
+  }
+})
+
 // 获取积分历史
 router.get('/history', auth, async (req, res) => {
   try {
