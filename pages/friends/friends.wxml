@@ -8,7 +8,6 @@
       <input class="input" placeholder="请输入" value="{{myName}}" bindinput="onNameInput" />
       <view class="mini-btn" bindtap="saveProfile">保存</view>
     </view>
-    <button class="btn btn-secondary" bindtap="exportMine">📤 导出我的结果（复制到剪贴板）</button>
   </view>
 
   <!-- 好友管理 -->
@@ -21,7 +20,6 @@
     <!-- 添加好友按钮组 -->
     <view class="add-btn-group">
       <button class="btn btn-primary" bindtap="toggleAddPanel">🔍 搜索添加好友</button>
-      <button class="btn btn-secondary" bindtap="importFriend">📥 从剪贴板导入</button>
     </view>
 
     <!-- 云端搜索添加面板 -->
