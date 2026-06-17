@@ -5,6 +5,7 @@ const {
   ZODIACS, ELEMENT_SCORES, MBTI_PAIRS, TASTE_COMPAT, ACHIEVEMENTS
 } = require('./data')
 const storage = require('./storage')
+const api = require('./api')
 
 function getZodiac(month, day) {
   for (const [name, sym, start, end, elem] of ZODIACS) {
@@ -104,6 +105,8 @@ function checkAfterTest(testKey, result) {
     if (storage.unlockAchievement(aid)) {
       const info = _achInfo(aid)
       if (info) unlocked.push(info)
+      // 同步到服务器
+      api.unlockAchievement(aid).catch(() => {})
       // 解锁成就奖励积分
       awardPoints('achievement_unlock')
     }
@@ -165,6 +168,7 @@ function checkFriendAdded() {
     if (storage.unlockAchievement(aid)) {
       const info = _achInfo(aid)
       if (info) unlocked.push(info)
+      api.unlockAchievement(aid).catch(() => {})
     }
   }
   if (n >= 1) tryUnlock('first_friend')
@@ -205,6 +209,8 @@ function awardPoints(action) {
   const reward = POINTS_REWARDS[action]
   if (!reward) return null
   const result = storage.addPoints(reward.points, reward.reason)
+  // 同步到服务器
+  api.addPoints(reward.points, reward.reason).catch(() => {})
   if (result.leveledUp) {
     const levelInfo = storage.getLevelInfo(result.level)
     wx.showModal({

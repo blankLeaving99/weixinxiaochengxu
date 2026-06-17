@@ -98,9 +98,15 @@ Page({
     try {
       const res = await api.getMoodHistory()
       if (res.code === 0 && res.history) {
-        // 直接写入本地存储，不触发回调避免回写循环
+        // 统一日期格式：服务器返回 created_at，本地用 date
+        const history = res.history.map(h => {
+          if (!h.date && h.created_at) {
+            h.date = (h.created_at || '').split('T')[0]
+          }
+          return h
+        })
         const data = storage.load()
-        data._mood = { history: res.history }
+        data._mood = { history }
         storage.save(data)
         this.loadHistory()
         this.loadWeekData()

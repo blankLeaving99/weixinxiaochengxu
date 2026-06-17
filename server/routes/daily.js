@@ -12,10 +12,21 @@ router.get('/', auth, async (req, res) => {
     }
     const state = rows[0]
     let history = []
-    try { history = JSON.parse(state.history_json) } catch (e) {}
+    let challengeDone = ''
+    try {
+      const parsed = JSON.parse(state.history_json)
+      if (Array.isArray(parsed)) {
+        // 旧格式：直接是数组
+        history = parsed
+      } else if (parsed && parsed.list) {
+        // 新格式：包含 list 和 challengeDone
+        history = parsed.list || []
+        challengeDone = parsed.challengeDone || ''
+      }
+    } catch (e) {}
     res.json({
       code: 0,
-      state: { streak: state.streak, last_date: state.last_date, history }
+      state: { streak: state.streak, last_date: state.last_date, history, challengeDone }
     })
   } catch (err) {
     res.json({ code: -1, error: err.message })
@@ -24,13 +35,15 @@ router.get('/', auth, async (req, res) => {
 
 // 更新每日一题状态
 router.put('/', auth, async (req, res) => {
-  const { streak, last_date, history } = req.body
+  const { streak, last_date, history, challengeDone } = req.body
   try {
+    // 将 challengeDone 存入 history_json 的元数据中
+    const historyData = { list: history || [], challengeDone: challengeDone || '' }
     await pool.query(
       `INSERT INTO daily_state (user_id, streak, last_date, history_json)
        VALUES (?, ?, ?, ?)
        ON DUPLICATE KEY UPDATE streak = VALUES(streak), last_date = VALUES(last_date), history_json = VALUES(history_json)`,
-      [req.user.id, streak || 0, last_date || '', JSON.stringify(history || [])]
+      [req.user.id, streak || 0, last_date || '', JSON.stringify(historyData)]
     )
     res.json({ code: 0, message: '每日一题状态已更新' })
   } catch (err) {

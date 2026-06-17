@@ -254,9 +254,11 @@ Page({
     const unlocked = []
     if (state.streak >= 3 && storage.unlockAchievement('daily_3')) {
       unlocked.push({ icon: '📅', title: '三日打卡', desc: '每日一题连续 3 天' })
+      api.unlockAchievement('daily_3').catch(() => {})
     }
     if (state.streak >= 7 && storage.unlockAchievement('daily_7')) {
       unlocked.push({ icon: '📆', title: '周更不停', desc: '每日一题连续 7 天' })
+      api.unlockAchievement('daily_7').catch(() => {})
     }
 
     wx.showToast({ title: '🔥 打卡成功 +10XP', icon: 'success' })
