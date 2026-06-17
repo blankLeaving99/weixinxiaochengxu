@@ -118,13 +118,25 @@ Page({
 
   loadHistory() {
     const moodState = storage.getMoodState()
-    const history = (moodState.history || []).slice(-30).reverse()
+    // 按日期去重，同一天只保留最后一条
+    const dayMap = {}
+    ;(moodState.history || []).forEach(h => {
+      const d = h.date || (h.created_at || '').split('T')[0]
+      if (d) dayMap[d] = h
+    })
+    const history = Object.values(dayMap).slice(-30).reverse()
     this.setData({ history })
   },
 
   loadWeekData() {
     const moodState = storage.getMoodState()
-    const history = moodState.history || []
+    // 按日期去重
+    const dayMap = {}
+    ;(moodState.history || []).forEach(h => {
+      const d = h.date || (h.created_at || '').split('T')[0]
+      if (d) dayMap[d] = h
+    })
+    const history = Object.values(dayMap)
     const weekData = []
     const now = new Date()
 
@@ -146,7 +158,13 @@ Page({
 
   loadMonthData() {
     const moodState = storage.getMoodState()
-    const history = moodState.history || []
+    // 按日期去重
+    const dayMap = {}
+    ;(moodState.history || []).forEach(h => {
+      const d = h.date || (h.created_at || '').split('T')[0]
+      if (d) dayMap[d] = h
+    })
+    const history = Object.values(dayMap)
     const now = new Date()
     const year = now.getFullYear()
     const month = now.getMonth()
@@ -169,17 +187,22 @@ Page({
   calcStats() {
     const moodState = storage.getMoodState()
     const history = moodState.history || []
-    // 去重：同一天只算一次
-    const uniqueDays = new Set(history.map(h => h.date || (h.created_at || '').split('T')[0]).filter(Boolean))
-    const totalDays = uniqueDays.size
+    // 按日期去重，同一天只保留最后一条记录
+    const dayMap = {}
+    history.forEach(h => {
+      const d = h.date || (h.created_at || '').split('T')[0]
+      if (d) dayMap[d] = h
+    })
+    const uniqueRecords = Object.values(dayMap)
+    const totalDays = uniqueRecords.length
 
     if (totalDays === 0) {
       this.setData({ stats: { avgMood: 0, happyDays: 0, totalDays: 0, topTags: [] } })
       return
     }
 
-    const happyDays = history.filter(h => h.mood >= 4).length
-    const avgMood = (history.reduce((sum, h) => sum + h.mood, 0) / totalDays).toFixed(1)
+    const happyDays = uniqueRecords.filter(h => h.mood >= 4).length
+    const avgMood = (uniqueRecords.reduce((sum, h) => sum + h.mood, 0) / totalDays).toFixed(1)
 
     const tagCount = {}
     history.forEach(h => {
@@ -233,10 +256,13 @@ Page({
       note: this.data.note
     }
 
-    // 保存到本地
+    // 保存到本地（按日期去重）
     const moodState = storage.getMoodState()
     const history = moodState.history || []
-    const existIdx = history.findIndex(h => h.date === today)
+    const existIdx = history.findIndex(h => {
+      const d = h.date || (h.created_at || '').split('T')[0]
+      return d === today
+    })
     if (existIdx >= 0) {
       history[existIdx] = record
     } else {
