@@ -78,15 +78,18 @@ Page({
     // 异步从后端同步数据
     this.syncFromServer()
 
-    // 获取可被搜索设置
-    this.loadDiscoverable()
+    // 获取可被搜索设置和真实用户ID
+    this.loadUserInfo()
   },
 
-  async loadDiscoverable() {
+  async loadUserInfo() {
     try {
       const res = await api.getUserInfo()
       if (res.code === 0 && res.user) {
-        this.setData({ discoverable: res.user.discoverable !== 0 })
+        this.setData({
+          discoverable: res.user.discoverable !== 0,
+          userId: res.user.id
+        })
       }
     } catch (e) {}
   },

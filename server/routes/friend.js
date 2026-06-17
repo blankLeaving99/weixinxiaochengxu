@@ -3,16 +3,29 @@ const router = express.Router()
 const pool = require('../config/db')
 const auth = require('../middleware/auth')
 
-// 搜索用户
+// 搜索用户（支持昵称和ID）
 router.post('/search', auth, async (req, res) => {
   const { keyword } = req.body
   if (!keyword) return res.json({ code: -1, error: '搜索关键词不能为空' })
 
   try {
-    const [users] = await pool.query(
-      'SELECT id, openid, nickname, avatar FROM users WHERE nickname LIKE ? AND id != ? AND discoverable = 1 LIMIT 50',
-      [`%${keyword}%`, req.user.id]
-    )
+    const trimmed = keyword.trim()
+    let users
+
+    // 如果是纯数字，按ID精确搜索
+    if (/^\d+$/.test(trimmed)) {
+      ;[users] = await pool.query(
+        'SELECT id, nickname, avatar FROM users WHERE id = ? AND id != ? LIMIT 1',
+        [parseInt(trimmed), req.user.id]
+      )
+    } else {
+      // 按昵称模糊搜索
+      ;[users] = await pool.query(
+        'SELECT id, nickname, avatar FROM users WHERE nickname LIKE ? AND id != ? AND discoverable = 1 LIMIT 50',
+        [`%${trimmed}%`, req.user.id]
+      )
+    }
+
     res.json({ code: 0, users })
   } catch (err) {
     res.json({ code: -1, error: err.message })

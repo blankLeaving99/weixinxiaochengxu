@@ -26,9 +26,9 @@
 
     <!-- 云端搜索添加面板 -->
     <view wx:if="{{showAddPanel}}" class="search-panel">
-      <text class="panel-title">搜索好友昵称</text>
+      <text class="panel-title">输入昵称或用户ID搜索</text>
       <view class="search-row">
-        <input class="search-input" placeholder="输入昵称搜索..." value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="searchUsers" />
+        <input class="search-input" placeholder="输入昵称或用户ID..." value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="searchUsers" />
         <view class="search-btn" bindtap="searchUsers" style="background: {{themeColor}}">搜索</view>
       </view>
 
