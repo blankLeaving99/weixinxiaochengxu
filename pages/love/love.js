@@ -152,18 +152,9 @@ Page({
         try {
           const res = await api.createChallenge(friendId, 'love')
           if (res.code === 0) {
-            // 创建成功后，发起者先答题
-            this.setData({
-              challengeId: res.challengeId,
-              friendName
-            })
-            // 获取自己的昵称
-            const user = api.getUser()
-            const myName = user ? (user.nickname || '我') : '我'
-            this.setData({
-              phase: 'setup',
-              playerAName: myName,
-              playerBName: friendName
+            // 跳转到新页面，带上 challengeId
+            wx.redirectTo({
+              url: `/pages/love/love?challengeId=${res.challengeId}&friendName=${encodeURIComponent(friendName)}`
             })
           } else {
             wx.showToast({ title: res.error || '发送失败', icon: 'none' })
@@ -189,7 +180,7 @@ Page({
       const challenge = res.challenge
       const user = api.getUser()
       const myId = user ? user.id : null
-      const isFrom = challenge.from_user_id === myId
+      const isFrom = challenge.from_user_id == myId
 
       if (challenge.status === 'completed') {
         this.showRemoteResult(challenge)
