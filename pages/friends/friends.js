@@ -335,18 +335,16 @@ Page({
 
     wx.showModal({
       title: '💕 发起挑战',
-      content: `向 ${friendName} 发起恋爱默契大挑战？`,
-      confirmText: '发起挑战',
+      content: `向 ${friendName} 发起恋爱默契大挑战？\n\n你需要先完成答题，对方收到通知后也会答题。`,
+      confirmText: '开始答题',
       success: async (m) => {
         if (!m.confirm) return
         try {
           const result = await api.createChallenge(friendId, 'love')
           if (result.code === 0) {
-            wx.showModal({
-              title: '挑战已发送！',
-              content: `已向 ${friendName} 发起挑战邀请。对方打开 app 后会收到通知。`,
-              showCancel: false,
-              confirmText: '知道了'
+            // 跳转到恋爱挑战页面，带上挑战信息
+            wx.navigateTo({
+              url: `/pages/love/love?challengeId=${result.challengeId}&friendName=${encodeURIComponent(friendName)}`
             })
           } else {
             wx.showToast({ title: result.error || '发送失败', icon: 'none' })
