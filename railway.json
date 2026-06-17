@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildContext": "./server"
+  },
+  "deploy": {
+    "startCommand": "node app.js"
+  }
+}

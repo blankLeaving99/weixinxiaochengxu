@@ -6,7 +6,7 @@
 // ⚠️ 替换为你的服务器地址
 // 开发时用局域网 IP（手机和电脑在同一 WiFi 下）
 // 部署后换成正式域名
-const BASE_URL = 'http://localhost:3001/api'
+const BASE_URL = 'https://weixinxiaochengxu-production.up.railway.app/api'
 
 // Token 存储 key
 const TOKEN_KEY = 'auth_token'

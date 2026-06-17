@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS daily_state (
   user_id INT NOT NULL UNIQUE,
   streak INT DEFAULT 0 COMMENT '连续打卡天数',
   last_date VARCHAR(10) DEFAULT '' COMMENT '最后打卡日期 YYYY-MM-DD',
-  history_json TEXT DEFAULT '[]' COMMENT '历史记录JSON',
+  history_json TEXT COMMENT '历史记录JSON',
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -91,6 +91,6 @@ CREATE TABLE IF NOT EXISTS daily_state (
 CREATE TABLE IF NOT EXISTS user_settings (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL UNIQUE,
-  settings_json TEXT NOT NULL DEFAULT '{}' COMMENT '设置JSON: 主题/字体/AI配置等',
+  settings_json TEXT NOT NULL COMMENT '设置JSON: 主题/字体/AI配置等',
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
