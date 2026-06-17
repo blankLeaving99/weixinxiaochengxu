@@ -18,6 +18,7 @@ app.use('/api/points', require('./routes/points'))
 app.use('/api/mood', require('./routes/mood'))
 app.use('/api/daily', require('./routes/daily'))
 app.use('/api/settings', require('./routes/settings'))
+app.use('/api/challenge', require('./routes/challenge'))
 
 // 健康检查
 app.get('/api/health', async (req, res) => {

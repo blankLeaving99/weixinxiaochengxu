@@ -70,7 +70,10 @@ Page({
     xpNeeded: 100,
     xpProgress: 0,
     totalXp: 0,
-    themeColor: '#7c3aed'
+    themeColor: '#7c3aed',
+    // 挑战通知
+    pendingChallenges: [],
+    hasPending: false
   },
 
   onLoad() {
@@ -158,6 +161,41 @@ Page({
       xpProgress,
       totalXp: pts.totalEarned
     })
+
+    // 检查待处理的挑战
+    this.checkPendingChallenges()
+  },
+
+  async checkPendingChallenges() {
+    try {
+      const res = await api.getPendingChallenges()
+      if (res.code === 0 && res.challenges && res.challenges.length > 0) {
+        this.setData({
+          pendingChallenges: res.challenges,
+          hasPending: true
+        })
+      } else {
+        this.setData({ pendingChallenges: [], hasPending: false })
+      }
+    } catch (e) {}
+  },
+
+  // 点击挑战通知，跳转到对应测试
+  onChallengeTap(e) {
+    const challenge = e.currentTarget.dataset.item
+    const testKey = challenge.test_key
+    const challengeId = challenge.id
+    const friendName = challenge.from_nickname
+
+    if (testKey === 'love') {
+      wx.navigateTo({
+        url: `/pages/love/love?challengeId=${challengeId}&friendName=${encodeURIComponent(friendName)}`
+      })
+    } else if (testKey === 'zodiac') {
+      wx.navigateTo({
+        url: `/pages/zodiac/zodiac?challengeId=${challengeId}&friendName=${encodeURIComponent(friendName)}`
+      })
+    }
   },
 
   getSummary(key, v) {

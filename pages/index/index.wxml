@@ -10,6 +10,21 @@
 
 <view class="page-wrap">
 
+  <!-- 挑战通知 -->
+  <view wx:if="{{hasPending}}" class="challenge-notice">
+    <view class="notice-title">💕 你收到 {{pendingChallenges.length}} 个挑战邀请！</view>
+    <view
+      wx:for="{{pendingChallenges}}"
+      wx:key="id"
+      class="notice-item"
+      data-item="{{item}}"
+      bindtap="onChallengeTap"
+    >
+      <text class="notice-text">{{item.from_nickname}} 向你发起{{item.test_key === 'love' ? '恋爱默契' : '星座配对'}}挑战</text>
+      <text class="notice-btn">去答题 ›</text>
+    </view>
+  </view>
+
   <!-- 轮播图 -->
   <swiper class="banner-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" circular="{{true}}" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff">
     <swiper-item wx:for="{{banners}}" wx:key="title" bindtap="onBannerTap" data-page="{{item.page}}">

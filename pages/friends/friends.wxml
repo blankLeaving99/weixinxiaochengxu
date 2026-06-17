@@ -72,6 +72,7 @@
       </view>
       <text class="friend-note" wx:if="{{item.note}}">📝 {{item.note}}</text>
       <view class="friend-actions">
+        <view class="action-btn pink" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="challengeFriend">💕 挑战</view>
         <view class="action-btn primary" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="compareFriend">🔍 对比</view>
         <view class="action-btn ghost" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="editNote">📝 备注</view>
         <view class="action-btn danger" data-name="{{item.name}}" data-id="{{item.id}}" bindtap="removeFriend">🗑 删除</view>

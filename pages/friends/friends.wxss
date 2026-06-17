@@ -198,6 +198,11 @@
   color: #ef4444;
 }
 
+.action-btn.pink {
+  background: #ec4899;
+  color: #fff;
+}
+
 /* 添加好友按钮组 */
 .add-btn-group {
   display: flex;

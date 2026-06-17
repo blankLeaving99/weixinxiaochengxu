@@ -328,6 +328,36 @@ Page({
     }
   },
 
+  // 发起挑战
+  challengeFriend(e) {
+    const friendId = e.currentTarget.dataset.id
+    const friendName = e.currentTarget.dataset.name
+
+    wx.showActionSheet({
+      itemList: ['💕 恋爱默契大挑战', '⭐ 星座配对测试'],
+      success: async (res) => {
+        const testKeys = ['love', 'zodiac']
+        const testKey = testKeys[res.tapIndex]
+
+        try {
+          const result = await api.createChallenge(friendId, testKey)
+          if (result.code === 0) {
+            wx.showModal({
+              title: '挑战已发送！',
+              content: `已向 ${friendName} 发起挑战邀请。对方打开 app 后会收到通知。`,
+              showCancel: false,
+              confirmText: '知道了'
+            })
+          } else {
+            wx.showToast({ title: result.error || '发送失败', icon: 'none' })
+          }
+        } catch (e) {
+          wx.showToast({ title: '发送失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
   goRanking() {
     wx.navigateTo({ url: '/pages/ranking/ranking' })
   }

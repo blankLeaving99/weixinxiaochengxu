@@ -278,6 +278,36 @@ async function saveSettings(settings) {
   return request('PUT', '/settings', { settings })
 }
 
+// ===== 挑战 =====
+
+async function createChallenge(friendId, testKey) {
+  return request('POST', '/challenge/create', { friendId, testKey })
+}
+
+async function getChallenges() {
+  return request('GET', '/challenge/list')
+}
+
+async function getPendingChallenges() {
+  return request('GET', '/challenge/pending')
+}
+
+async function getChallenge(id) {
+  return request('GET', `/challenge/${id}`)
+}
+
+async function acceptChallenge(id) {
+  return request('POST', `/challenge/${id}/accept`)
+}
+
+async function submitChallengeAnswers(id, answers) {
+  return request('POST', `/challenge/${id}/answer`, { answers })
+}
+
+async function getChallengeResult(id) {
+  return request('GET', `/challenge/${id}/result`)
+}
+
 // ===== 健康检查 =====
 
 async function healthCheck() {
@@ -326,6 +356,14 @@ module.exports = {
   // 设置
   getSettings,
   saveSettings,
+  // 挑战
+  createChallenge,
+  getChallenges,
+  getPendingChallenges,
+  getChallenge,
+  acceptChallenge,
+  submitChallengeAnswers,
+  getChallengeResult,
   // 其他
   healthCheck
 }
