@@ -104,13 +104,15 @@
   <view class="menu-section">
     <text class="menu-section-title">数据管理</text>
     <view class="menu-item" bindtap="backup">
-      <text class="menu-icon">📤</text>
-      <text class="menu-text">备份数据</text>
+      <text class="menu-icon">☁️</text>
+      <text class="menu-text">备份到云端</text>
+      <text class="menu-hint">同步到服务器</text>
       <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="restore">
       <text class="menu-icon">📥</text>
-      <text class="menu-text">恢复数据</text>
+      <text class="menu-text">从云端恢复</text>
+      <text class="menu-hint">拉取服务器数据</text>
       <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="clearAll">
@@ -121,8 +123,8 @@
   </view>
 
   <view class="footer-info">
-    <text class="footer-text">数据保存在微信小程序本地存储中</text>
-    <text class="footer-text">卸载小程序会清空所有数据</text>
+    <text class="footer-text">数据已同步到云端服务器</text>
+    <text class="footer-text">换设备登录同一账号即可恢复</text>
   </view>
 
 </view>

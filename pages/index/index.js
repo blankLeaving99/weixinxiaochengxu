@@ -169,6 +169,7 @@ Page({
   async checkPendingChallenges() {
     try {
       const res = await api.getPendingChallenges()
+      console.log('[Challenge] pending:', JSON.stringify(res))
       if (res.code === 0 && res.challenges && res.challenges.length > 0) {
         this.setData({
           pendingChallenges: res.challenges,
@@ -178,7 +179,7 @@ Page({
         this.setData({ pendingChallenges: [], hasPending: false })
       }
     } catch (e) {
-      // 网络错误时清除通知，避免卡住
+      console.log('[Challenge] check error:', e)
       this.setData({ pendingChallenges: [], hasPending: false })
     }
   },

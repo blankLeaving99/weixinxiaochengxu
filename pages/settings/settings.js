@@ -302,58 +302,99 @@ Page({
     wx.showToast({ title: '✓ 已保存', icon: 'success' })
   },
 
+  // 备份：同步本地数据到云端
   async backup() {
-    // 备份前先从服务器同步最新数据
-    wx.showLoading({ title: '同步中...' })
-    await this.syncFromServer()
-    wx.hideLoading()
-
-    const data = storage.fullBackup()
-    const text = JSON.stringify(data)
-    wx.setClipboardData({
-      data: text,
-      success: () => {
-        wx.showModal({
-          title: '✅ 备份已复制',
-          content: `全部数据已复制到剪贴板（${text.length} 字符）。请妥善保存，需要时在「恢复数据」中粘贴即可还原。`,
-          showCancel: false,
-          confirmText: '知道了'
-        })
-      }
-    })
+    wx.showLoading({ title: '备份中...' })
+    try {
+      await this.syncToServer(storage.fullBackup())
+      wx.hideLoading()
+      wx.showModal({
+        title: '✅ 备份成功',
+        content: '所有数据已同步到云端服务器。换设备登录同一账号即可恢复。',
+        showCancel: false,
+        confirmText: '知道了'
+      })
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: '备份失败', icon: 'none' })
+    }
   },
 
+  // 恢复：从云端拉取自己的数据
   restore() {
-    wx.getClipboardData({
-      success: (res) => {
-        const text = (res.data || '').trim()
-        if (!text) {
-          wx.showToast({ title: '剪贴板为空', icon: 'none' })
-          return
-        }
-        let data
+    wx.showModal({
+      title: '恢复数据',
+      content: '将从云端拉取你的数据并覆盖本地，确定继续吗？',
+      confirmColor: '#f59e0b',
+      success: async (m) => {
+        if (!m.confirm) return
+
+        wx.showLoading({ title: '从云端恢复中...' })
         try {
-          data = JSON.parse(text)
-        } catch (e) {
-          wx.showToast({ title: '不是有效的备份', icon: 'none' })
-          return
-        }
-        wx.showModal({
-          title: '确认恢复',
-          content: '恢复备份将覆盖当前所有数据，确定继续吗？',
-          confirmColor: '#ef4444',
-          success: async (m) => {
-            if (m.confirm) {
-              storage.fullRestore(data)
-              wx.showToast({ title: '✓ 已恢复', icon: 'success' })
+          const data = {}
 
-              // 恢复后同步数据到服务器
-              await this.syncToServer(data)
+          // 拉取用户信息（验证身份）
+          const userRes = await api.getUserInfo()
+          if (userRes.code !== 0) {
+            wx.hideLoading()
+            wx.showToast({ title: '请先登录', icon: 'none' })
+            return
+          }
+          data._profile = { name: userRes.user.nickname || '' }
 
-              this.onShow()
+          // 拉取测试结果
+          const testRes = await api.getTestResults()
+          if (testRes.code === 0) {
+            Object.assign(data, testRes.results)
+          }
+
+          // 拉取积分
+          const ptsRes = await api.getPoints()
+          if (ptsRes.code === 0) {
+            data._points = {
+              xp: ptsRes.points.xp || 0,
+              level: ptsRes.points.level || 1,
+              totalEarned: ptsRes.points.total_earned || 0,
+              history: []
             }
           }
-        })
+
+          // 拉取成就
+          const achRes = await api.getAchievements()
+          if (achRes.code === 0) {
+            data._achievements = achRes.achievements || {}
+          }
+
+          // 拉取设置
+          const settingsRes = await api.getSettings()
+          if (settingsRes.code === 0) {
+            data._settings = settingsRes.settings || {}
+          }
+
+          // 拉取心情日记
+          const moodRes = await api.getMoodHistory()
+          if (moodRes.code === 0) {
+            data._mood = { history: moodRes.history || [] }
+          }
+
+          // 拉取每日一题
+          const dailyRes = await api.getDailyState()
+          if (dailyRes.code === 0) {
+            data._daily = dailyRes.state || { streak: 0, last_date: '', history: [] }
+          }
+
+          // 恢复到本地
+          storage.fullRestore(data)
+          wx.hideLoading()
+          wx.showToast({ title: '✓ 恢复成功', icon: 'success' })
+
+          // 刷新页面
+          this.onShow()
+        } catch (e) {
+          wx.hideLoading()
+          wx.showToast({ title: '恢复失败', icon: 'none' })
+          console.error('恢复失败:', e)
+        }
       }
     })
   },
